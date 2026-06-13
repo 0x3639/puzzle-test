@@ -262,6 +262,19 @@ For H100, if auto-detection fails:
 CUDA_ARCH=90 bash runpod/run.sh smoke
 ```
 
+If RunPod reports `Unsupported gpu architecture 'compute_120'`, the GPU is newer than the installed CUDA toolkit. Update the repo and rerun:
+
+```sh
+git pull
+bash runpod/run.sh smoke
+```
+
+The script will now fall back to a supported PTX target automatically. Manual fallback:
+
+```sh
+CUDA_ARCH=90-virtual bash runpod/run.sh smoke
+```
+
 See [runpod/README.md](runpod/README.md) for the shortest RunPod-focused guide.
 
 ## Other Probes

@@ -99,9 +99,30 @@ The script tries to detect compute capability with `nvidia-smi`.
 Override it if needed:
 
 ```sh
-CUDA_ARCH=90 bash runpod/run.sh smoke   # H100
-CUDA_ARCH=89 bash runpod/run.sh smoke   # RTX 4090 / L40S
-CUDA_ARCH=80 bash runpod/run.sh smoke   # A100
+CUDA_ARCH=90 bash runpod/run.sh smoke           # H100 with matching toolkit
+CUDA_ARCH=90-virtual bash runpod/run.sh smoke   # newer GPU, older toolkit
+CUDA_ARCH=89 bash runpod/run.sh smoke           # RTX 4090 / L40S
+CUDA_ARCH=80 bash runpod/run.sh smoke           # A100
+```
+
+If you see `Unsupported gpu architecture 'compute_120'`, your GPU is newer than the installed CUDA toolkit. Pull the latest script and rerun:
+
+```sh
+git pull
+bash runpod/run.sh smoke
+```
+
+If you need an immediate manual override, try:
+
+```sh
+CUDA_ARCH=90-virtual bash runpod/run.sh smoke
+```
+
+If that still fails on an older toolkit:
+
+```sh
+CUDA_ARCH=89-virtual bash runpod/run.sh smoke
+CUDA_ARCH=86-virtual bash runpod/run.sh smoke
 ```
 
 ## Important Limit

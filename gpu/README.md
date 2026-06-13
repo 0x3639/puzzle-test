@@ -86,6 +86,13 @@ cmake -S gpu -B gpu/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CUDA_ARCHITECTURES=
 cmake --build gpu/build -j
 ```
 
+For a newer GPU with an older CUDA toolkit, use a virtual PTX target:
+
+```sh
+cmake -S gpu -B gpu/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CUDA_ARCHITECTURES=90-virtual
+cmake --build gpu/build -j
+```
+
 ## Smoke Test
 
 The Python runner measured `643` checksum-valid phrases in the first `10,000` exact-length candidates.

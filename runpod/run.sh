@@ -96,12 +96,7 @@ EOF
   exit 1
 }
 
-detect_cuda_arch() {
-  if [ -n "${CUDA_ARCH:-}" ]; then
-    printf '%s\n' "$CUDA_ARCH"
-    return
-  fi
-
+detect_gpu_arch() {
   if have nvidia-smi; then
     local cap
     cap="$(nvidia-smi --query-gpu=compute_cap --format=csv,noheader 2>/dev/null | head -n 1 | tr -d '.[:space:]')"
@@ -111,9 +106,55 @@ detect_cuda_arch() {
     fi
   fi
 
-  warn "Could not detect CUDA architecture with nvidia-smi. Defaulting to 89."
-  warn "Override with CUDA_ARCH=90 for H100, CUDA_ARCH=89 for RTX 4090/L40S, or CUDA_ARCH=80 for A100."
-  printf '89\n'
+  return 1
+}
+
+nvcc_supports_compute() {
+  local arch="$1"
+  local tmp_base="${TMPDIR:-/tmp}/zenon_cuda_arch_test_$$"
+  local source="${tmp_base}.cu"
+  local object="${tmp_base}.o"
+
+  printf '__global__ void k() {}\nint main() { return 0; }\n' > "$source"
+  if nvcc -c "$source" -o "$object" -gencode="arch=compute_${arch},code=compute_${arch}" >/dev/null 2>&1; then
+    rm -f "$source" "$object"
+    return 0
+  fi
+  rm -f "$source" "$object"
+  return 1
+}
+
+select_cuda_arch() {
+  if [ -n "${CUDA_ARCH:-}" ]; then
+    printf '%s\n' "$CUDA_ARCH"
+    return
+  fi
+
+  local detected=""
+  if detected="$(detect_gpu_arch)"; then
+    if nvcc_supports_compute "$detected"; then
+      printf '%s\n' "$detected"
+      return
+    fi
+
+    warn "GPU reports compute capability ${detected}, but this nvcc cannot compile compute_${detected}."
+    warn "Selecting the newest PTX architecture this toolkit supports for driver JIT."
+  else
+    warn "Could not detect CUDA architecture with nvidia-smi."
+  fi
+
+  local arch
+  for arch in 120 100 90 89 86 80 75 70 61 52; do
+    if [ -n "$detected" ] && [ "$arch" -gt "$detected" ]; then
+      continue
+    fi
+    if nvcc_supports_compute "$arch"; then
+      printf '%s-virtual\n' "$arch"
+      return
+    fi
+  done
+
+  die "Could not find any CUDA architecture supported by nvcc. Try a newer CUDA devel image."
 }
 
 ensure_python_env() {
@@ -142,7 +183,7 @@ generate_workload() {
 
 configure_build() {
   local arch
-  arch="$(detect_cuda_arch)"
+  arch="$(select_cuda_arch)"
   log "Configuring CUDA build for architecture ${arch}"
   cmake -S gpu -B gpu/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CUDA_ARCHITECTURES="$arch"
 }
@@ -217,10 +258,11 @@ Examples:
   bash runpod/run.sh range 500000000 100000000
 
 Environment overrides:
-  CUDA_ARCH=90 bash runpod/run.sh smoke     # H100
-  CUDA_ARCH=89 bash runpod/run.sh smoke     # RTX 4090 / L40S
-  CUDA_ARCH=80 bash runpod/run.sh smoke     # A100
-  SKIP_VENV=1 bash runpod/run.sh smoke      # use system Python
+  CUDA_ARCH=90 bash runpod/run.sh smoke            # H100 with matching toolkit
+  CUDA_ARCH=90-virtual bash runpod/run.sh smoke    # newer GPU, older toolkit
+  CUDA_ARCH=89 bash runpod/run.sh smoke            # RTX 4090 / L40S
+  CUDA_ARCH=80 bash runpod/run.sh smoke            # A100
+  SKIP_VENV=1 bash runpod/run.sh smoke             # use system Python
 
 Current CUDA stage:
   exact-length candidate enumeration + BIP39 checksum validation only.
