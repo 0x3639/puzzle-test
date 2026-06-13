@@ -1,0 +1,1033 @@
+{
+  "scope": {
+    "known_words": [
+      "oblige",
+      "dilemma",
+      "hurry",
+      "disorder",
+      "happy",
+      "spoil",
+      "shiver",
+      "key"
+    ],
+    "target_address": "z1qrn3jeapt848zxg3akf2ewhrxxwsa945sj798s",
+    "fields": {
+      "A": "0729d0b69794c964d72864eb1a1755d9",
+      "B": "b5531ddcbd4228ce30166cb11041145766d8",
+      "C": "e05773c359",
+      "E": "bedbf77f968a6348c642094ff5ad401b"
+    }
+  },
+  "attempts": {
+    "entropy_models": 13622,
+    "tail_bit_models": 249370,
+    "xor_stream_models": 2400,
+    "direct_ascii_models": 10792
+  },
+  "candidate_count": 1057,
+  "valid_bip39_candidate_count": 494,
+  "hit_count": 0,
+  "hits": [],
+  "valid_bip39_candidates_sample": [
+    {
+      "model": "entropy_128_to_mnemonic_tail",
+      "detail": "sha512(A):window16_28:be61350d9185903b6da4b43d08aa8996",
+      "last4": "dial earn pen code",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key dial earn pen code",
+      "valid_bip39": true,
+      "address": "z1qqgpk4mrwr8w8cempqqncvjv6q63aglrn9c06g",
+      "matches_target": false
+    },
+    {
+      "model": "entropy_128_to_mnemonic_tail",
+      "detail": "hmac_sha256_A(BEAC_rev):window16_8:c2d35ce98deee5a5d4e0f0914f67dcb8",
+      "last4": "mule kite warm ill",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key mule kite warm ill",
+      "valid_bip39": true,
+      "address": "z1qzy3sdk45hyz8nlmtvz2v76m4s805e3gdnfkev",
+      "matches_target": false
+    },
+    {
+      "model": "entropy_128_to_mnemonic_tail",
+      "detail": "hmac_sha256_E(CEAB):window16_9:0b1eef6d32b19a6861b98486224e3b45",
+      "last4": "mail bar mom merry",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key mail bar mom merry",
+      "valid_bip39": true,
+      "address": "z1qzx9nnysjhsus37xwlwjau2rqld93dl346n398",
+      "matches_target": false
+    },
+    {
+      "model": "entropy_128_to_mnemonic_tail",
+      "detail": "sha512(EBCA_rev):window16_31:ab9eec349a58e22b8b9c029df062c411",
+      "last4": "over loan rain car",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key over loan rain car",
+      "valid_bip39": true,
+      "address": "z1qrxjkejp5ax7aane57ve3x5slhkc0s2f8rlrnk",
+      "matches_target": false
+    },
+    {
+      "model": "entropy_128_to_mnemonic_tail",
+      "detail": "sha256(A_plus_B):window16_9:2d43a7c9e78b2b87dc07b9680dd59672",
+      "last4": "gym huge grain top",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key gym huge grain top",
+      "valid_bip39": true,
+      "address": "z1qqyyjcjdh26a8wwpge3de8t4x8vqsvd59kuj8k",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "ABCE:bit_offset_260:tail_6d8e05773c",
+      "last4": "horn ice fruit joy",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key horn ice fruit joy",
+      "valid_bip39": true,
+      "address": "z1qrlw0rhw2gzywtkxxy2esknnwus02hwnfezxc9",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "ABCE_rev:bit_offset_125:tail_cb386e6afc",
+      "last4": "sleep sell one web",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key sleep sell one web",
+      "valid_bip39": true,
+      "address": "z1qpgnq5m50xs7vf7v0zx7t886d9npqdd4ee4q4p",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "ACEB_rev:bit_offset_269:tail_cb386e6afc",
+      "last4": "sleep sell one web",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key sleep sell one web",
+      "valid_bip39": true,
+      "address": "z1qpgnq5m50xs7vf7v0zx7t886d9npqdd4ee4q4p",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "AEBC:bit_offset_388:tail_6d8e05773c",
+      "last4": "horn ice fruit joy",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key horn ice fruit joy",
+      "valid_bip39": true,
+      "address": "z1qrlw0rhw2gzywtkxxy2esknnwus02hwnfezxc9",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "AEBC_rev:bit_offset_289:tail_efb77db2aa",
+      "last4": "use room hole feed",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key use room hole feed",
+      "valid_bip39": true,
+      "address": "z1qp4ky3pe4sgyyr8vfal368h78wrkdleuwwq7z6",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "AECB_rev:bit_offset_289:tail_efb77db2aa",
+      "last4": "use room hole feed",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key use room hole feed",
+      "valid_bip39": true,
+      "address": "z1qp4ky3pe4sgyyr8vfal368h78wrkdleuwwq7z6",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "BACE_rev:bit_offset_125:tail_cb386e6afc",
+      "last4": "sleep sell one web",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key sleep sell one web",
+      "valid_bip39": true,
+      "address": "z1qpgnq5m50xs7vf7v0zx7t886d9npqdd4ee4q4p",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "BACE_rev:bit_offset_271:tail_681483ec33",
+      "last4": "gym piano wild gun",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key gym piano wild gun",
+      "valid_bip39": true,
+      "address": "z1qz2ddnmlgzd66gkdszqp4j9sx4a0gh9w8s4d94",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "BAEC_rev:bit_offset_145:tail_efb77db2aa",
+      "last4": "use room hole feed",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key use room hole feed",
+      "valid_bip39": true,
+      "address": "z1qp4ky3pe4sgyyr8vfal368h78wrkdleuwwq7z6",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "BAEC_rev:bit_offset_271:tail_681483ec33",
+      "last4": "gym piano wild gun",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key gym piano wild gun",
+      "valid_bip39": true,
+      "address": "z1qz2ddnmlgzd66gkdszqp4j9sx4a0gh9w8s4d94",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "BCAE:bit_offset_132:tail_6d8e05773c",
+      "last4": "horn ice fruit joy",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key horn ice fruit joy",
+      "valid_bip39": true,
+      "address": "z1qrlw0rhw2gzywtkxxy2esknnwus02hwnfezxc9",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "BCAE_rev:bit_offset_105:tail_efb77db2aa",
+      "last4": "use room hole feed",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key use room hole feed",
+      "valid_bip39": true,
+      "address": "z1qp4ky3pe4sgyyr8vfal368h78wrkdleuwwq7z6",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "BCAE_rev:bit_offset_223:tail_db681483ac",
+      "last4": "swarm doll can fly",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key swarm doll can fly",
+      "valid_bip39": true,
+      "address": "z1qpzlv27trxn63nzax7egw3d59yswwrky2478vn",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "BCEA:bit_offset_132:tail_6d8e05773c",
+      "last4": "horn ice fruit joy",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key horn ice fruit joy",
+      "valid_bip39": true,
+      "address": "z1qrlw0rhw2gzywtkxxy2esknnwus02hwnfezxc9",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "BCEA_rev:bit_offset_253:tail_cb386e6afc",
+      "last4": "sleep sell one web",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key sleep sell one web",
+      "valid_bip39": true,
+      "address": "z1qpgnq5m50xs7vf7v0zx7t886d9npqdd4ee4q4p",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "BECA_rev:bit_offset_95:tail_db681483ac",
+      "last4": "swarm doll can fly",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key swarm doll can fly",
+      "valid_bip39": true,
+      "address": "z1qpzlv27trxn63nzax7egw3d59yswwrky2478vn",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "CABE_rev:bit_offset_367:tail_db681483ac",
+      "last4": "swarm doll can fly",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key swarm doll can fly",
+      "valid_bip39": true,
+      "address": "z1qpzlv27trxn63nzax7egw3d59yswwrky2478vn",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "CAEB_rev:bit_offset_249:tail_efb77db2aa",
+      "last4": "use room hole feed",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key use room hole feed",
+      "valid_bip39": true,
+      "address": "z1qp4ky3pe4sgyyr8vfal368h78wrkdleuwwq7z6",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "CAEB_rev:bit_offset_367:tail_db681483ac",
+      "last4": "swarm doll can fly",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key swarm doll can fly",
+      "valid_bip39": true,
+      "address": "z1qpzlv27trxn63nzax7egw3d59yswwrky2478vn",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "CBAE_rev:bit_offset_105:tail_efb77db2aa",
+      "last4": "use room hole feed",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key use room hole feed",
+      "valid_bip39": true,
+      "address": "z1qp4ky3pe4sgyyr8vfal368h78wrkdleuwwq7z6",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "CBAE_rev:bit_offset_231:tail_681483ec33",
+      "last4": "gym piano wild gun",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key gym piano wild gun",
+      "valid_bip39": true,
+      "address": "z1qz2ddnmlgzd66gkdszqp4j9sx4a0gh9w8s4d94",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "CEAB_rev:bit_offset_397:tail_cb386e6afc",
+      "last4": "sleep sell one web",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key sleep sell one web",
+      "valid_bip39": true,
+      "address": "z1qpgnq5m50xs7vf7v0zx7t886d9npqdd4ee4q4p",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "CEBA_rev:bit_offset_103:tail_681483ec33",
+      "last4": "gym piano wild gun",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key gym piano wild gun",
+      "valid_bip39": true,
+      "address": "z1qz2ddnmlgzd66gkdszqp4j9sx4a0gh9w8s4d94",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "CEBA_rev:bit_offset_397:tail_cb386e6afc",
+      "last4": "sleep sell one web",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key sleep sell one web",
+      "valid_bip39": true,
+      "address": "z1qpgnq5m50xs7vf7v0zx7t886d9npqdd4ee4q4p",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "EABC:bit_offset_388:tail_6d8e05773c",
+      "last4": "horn ice fruit joy",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key horn ice fruit joy",
+      "valid_bip39": true,
+      "address": "z1qrlw0rhw2gzywtkxxy2esknnwus02hwnfezxc9",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "EBAC_rev:bit_offset_143:tail_681483ec33",
+      "last4": "gym piano wild gun",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key gym piano wild gun",
+      "valid_bip39": true,
+      "address": "z1qz2ddnmlgzd66gkdszqp4j9sx4a0gh9w8s4d94",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "EBCA:bit_offset_260:tail_6d8e05773c",
+      "last4": "horn ice fruit joy",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key horn ice fruit joy",
+      "valid_bip39": true,
+      "address": "z1qrlw0rhw2gzywtkxxy2esknnwus02hwnfezxc9",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "EBCA_rev:bit_offset_95:tail_db681483ac",
+      "last4": "swarm doll can fly",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key swarm doll can fly",
+      "valid_bip39": true,
+      "address": "z1qpzlv27trxn63nzax7egw3d59yswwrky2478vn",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "ECAB_rev:bit_offset_239:tail_db681483ac",
+      "last4": "swarm doll can fly",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key swarm doll can fly",
+      "valid_bip39": true,
+      "address": "z1qpzlv27trxn63nzax7egw3d59yswwrky2478vn",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "ECBA_rev:bit_offset_103:tail_681483ec33",
+      "last4": "gym piano wild gun",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key gym piano wild gun",
+      "valid_bip39": true,
+      "address": "z1qz2ddnmlgzd66gkdszqp4j9sx4a0gh9w8s4d94",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "sha256(A):bit_offset_153:tail_6e19094dbc",
+      "last4": "host sign fat junk",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key host sign fat junk",
+      "valid_bip39": true,
+      "address": "z1qztljq3ry4uk554kc5p0ksydv3yy0znjtljyu0",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "double_sha256(A):bit_offset_5:tail_0a3e94615b",
+      "last4": "any visa blue rent",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key any visa blue rent",
+      "valid_bip39": true,
+      "address": "z1qpevp2tkd5rfqkc5rkgz5vlj3dq6nhsnpfkrtr",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "double_sha256(A):bit_offset_111:tail_699f2ee57f",
+      "last4": "hat west rich zone",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key hat west rich zone",
+      "valid_bip39": true,
+      "address": "z1qpdf925z7u7ee9r799ups8h30wa2uajnc2vyan",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "double_sha256(A):bit_offset_142:tail_bfeae8c053",
+      "last4": "say firm copy pond",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key say firm copy pond",
+      "valid_bip39": true,
+      "address": "z1qzunpttd0eqmeaaq97t05r395ndnwpzfe3zu4z",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "sha512(A):bit_offset_302:tail_2d0f422aa2",
+      "last4": "code key melt echo",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key code key melt echo",
+      "valid_bip39": true,
+      "address": "z1qpqty386f35axt8vtj335x4nmzjdz8weyff4ku",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "sha512(A):bit_offset_312:tail_3d08aa8996",
+      "last4": "dial earn pen code",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key dial earn pen code",
+      "valid_bip39": true,
+      "address": "z1qqgpk4mrwr8w8cempqqncvjv6q63aglrn9c06g",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha256_E(A):bit_offset_41:tail_409055076c",
+      "last4": "dog live dove suit",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key dog live dove suit",
+      "valid_bip39": true,
+      "address": "z1qpy5m8vsxtmr2vyqzefym6z045c7ewjh30zntq",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha512_E(A):bit_offset_150:tail_80d10c644f",
+      "last4": "liar mask boil own",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key liar mask boil own",
+      "valid_bip39": true,
+      "address": "z1qqhgmzu3nte3w35q29f4cfdmat7u05zwvfqd59",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha512_E(A):bit_offset_351:tail_972ea66ae9",
+      "last4": "now inside one spy",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key now inside one spy",
+      "valid_bip39": true,
+      "address": "z1qrrftr6srxnyfx0afwcrn6evqhm9t7vmsklalq",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha512_E(A):bit_offset_404:tail_7b6231ee21",
+      "last4": "kiwi bag knee dumb",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key kiwi bag knee dumb",
+      "valid_bip39": true,
+      "address": "z1qzj30mz4qpvrdypfcu9avxc9p7ajg8exd9u6ym",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha256_A(A):bit_offset_17:tail_2c371ff7f4",
+      "last4": "club rib worth try",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key club rib worth try",
+      "valid_bip39": true,
+      "address": "z1qrdrrfhwxquy8hh4zyz3n2fnw4z6dfc6cs60rl",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "sha256(A_rev):bit_offset_25:tail_055c15527a",
+      "last4": "aim thing fee void",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key aim thing fee void",
+      "valid_bip39": true,
+      "address": "z1qqygn8wnfre9qu7avjg7d2ur0csp5wtkk5dvh0",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "double_sha256(A_rev):bit_offset_96:tail_7def48cc1a",
+      "last4": "law kid credit cry",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key law kid credit cry",
+      "valid_bip39": true,
+      "address": "z1qqnleh5klna7f5juglws30y2qvwxq8qxwfaf6x",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "sha512(A_rev):bit_offset_448:tail_f68eedc0e3",
+      "last4": "walk jazz ice ship",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key walk jazz ice ship",
+      "valid_bip39": true,
+      "address": "z1qrdsu9z4smefgqdkw4xcnqc9c0gfg5c3tvfea6",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha512_E(A_rev):bit_offset_169:tail_d35cb6bf9d",
+      "last4": "spy toss quiz deny",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key spy toss quiz deny",
+      "valid_bip39": true,
+      "address": "z1qpgv270epfkfdmtsk58g880v55ad29nzxgurjk",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "sha512(B):bit_offset_107:tail_ffe72badcf",
+      "last4": "zoo deer twin pact",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key zoo deer twin pact",
+      "valid_bip39": true,
+      "address": "z1qpww9e6hxjueancapza4qxfp9qlnk9s2j3et58",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "sha512(B):bit_offset_236:tail_70e3f27767",
+      "last4": "ill buzz oven soul",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key ill buzz oven soul",
+      "valid_bip39": true,
+      "address": "z1qzfkgcmxlp8tj77kusu0zy058rynevv28l2tcy",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha256_E(B):bit_offset_173:tail_604a6e21b8",
+      "last4": "gate fat mask icon",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key gate fat mask icon",
+      "valid_bip39": true,
+      "address": "z1qqfsqx88zn7qzesurt4v02g2r79dqurs0fqcxv",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha256_A(B):bit_offset_63:tail_14e04f4651",
+      "last4": "belt act spice pet",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key belt act spice pet",
+      "valid_bip39": true,
+      "address": "z1qrmru2a8f5gyn9dmyv3ldgvdzehpvxz63wrrj8",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "sha256(B_rev):bit_offset_12:tail_05500793ef",
+      "last4": "aim lens top taste",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key aim lens top taste",
+      "valid_bip39": true,
+      "address": "z1qz43pmm8qxx5t73468w6fy7zudzdqwp6u63y2t",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha256_E(B_rev):bit_offset_18:tail_40bc97ffc0",
+      "last4": "doll tool zoo life",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key doll tool zoo life",
+      "valid_bip39": true,
+      "address": "z1qrtlkq4kwrergtr3dzma22tmr0m7n695wq0atm",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha256_E(B_rev):bit_offset_208:tail_ca94fc137b",
+      "last4": "skin pony age walk",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key skin pony age walk",
+      "valid_bip39": true,
+      "address": "z1qpy3mn4flna0lkfg39zlrlthuq2w0f6rzxqmdn",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha512_E(B_rev):bit_offset_3:tail_d1f1d9e17c",
+      "last4": "spin mom joke what",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key spin mom joke what",
+      "valid_bip39": true,
+      "address": "z1qpfjz0ufu6qzmzxsqtg5v52eatrk0sd4zswm3n",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha512_E(B_rev):bit_offset_125:tail_5a6ce1022f",
+      "last4": "foil grow dog fury",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key foil grow dog fury",
+      "valid_bip39": true,
+      "address": "z1qzk6qfnkwyxfeq4nsgsyudnxrrqj5ksnc6ga59",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "sha256(C):bit_offset_87:tail_bdb7e63ede",
+      "last4": "sad sand moral sad",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key sad sand moral sad",
+      "valid_bip39": true,
+      "address": "z1qqnu30k7lf076n52ndgl82j4ssrg8dqm8xpxvs",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "sha512(C):bit_offset_102:tail_f5e7e71e7f",
+      "last4": "vote dish shy year",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key vote dish shy year",
+      "valid_bip39": true,
+      "address": "z1qp7tmexzmxp43p04rhtc5jhhye0vzm5dhrneta",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "sha512(C):bit_offset_197:tail_9ab50047de",
+      "last4": "one pool ball rose",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key one pool ball rose",
+      "valid_bip39": true,
+      "address": "z1qz8evjg92ympjv3py5nn59xn5sp8q85t9kagv7",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha512_E(C):bit_offset_102:tail_5193d1a07c",
+      "last4": "face ozone gym wet",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key face ozone gym wet",
+      "valid_bip39": true,
+      "address": "z1qrf54dpt7jnqf0frvxz2xq7jdx99scqx2lwwgz",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha512_E(C):bit_offset_362:tail_a0de27783b",
+      "last4": "patch van task jar",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key patch van task jar",
+      "valid_bip39": true,
+      "address": "z1qqzezch959lwhgnce0p3t69vd6q2lmpyl5wzx0",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha256_A(C):bit_offset_46:tail_97398416a4",
+      "last4": "now slow aisle end",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key now slow aisle end",
+      "valid_bip39": true,
+      "address": "z1qzhcsuucsp3lftrz5fr39j9sd2m4k8wlefmzef",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "double_sha256(C_rev):bit_offset_164:tail_6e6d304630",
+      "last4": "hover hat bag gaze",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key hover hat bag gaze",
+      "valid_bip39": true,
+      "address": "z1qpkjznjaul4tde36haw40xmfyukcnfj6gk745y",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "sha512(C_rev):bit_offset_149:tail_1ee5788203",
+      "last4": "bus cloth calm all",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key bus cloth calm all",
+      "valid_bip39": true,
+      "address": "z1qq96mymqn9fv6z79rhvne8v85gn6zu5xdfhzma",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "sha512(C_rev):bit_offset_166:tail_f10406e3b4",
+      "last4": "valve cage rib gym",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key valve cage rib gym",
+      "valid_bip39": true,
+      "address": "z1qqlzdu9qdzp87dmdme9zwcazhnk28sdzddgf0y",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "sha512(C_rev):bit_offset_265:tail_669f30e066",
+      "last4": "grief wet day snow",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key grief wet day snow",
+      "valid_bip39": true,
+      "address": "z1qpck974x8z3vvdw9yme94dp5dgys3q25tq0090",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha512_E(C_rev):bit_offset_143:tail_f9d71c61c0",
+      "last4": "what rib blur like",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key what rib blur like",
+      "valid_bip39": true,
+      "address": "z1qp6vq3jxussetdnm3atttsthmns66mrsp7u3hq",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha512_E(C_rev):bit_offset_284:tail_6e97c5ee4d",
+      "last4": "hub sail knee only",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key hub sail knee only",
+      "valid_bip39": true,
+      "address": "z1qz36hgu023sgx947hyzdau7sdms298q74ag4lz",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha512_E(C_rev):bit_offset_340:tail_56adf8b506",
+      "last4": "find hurt coil ask",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key find hurt coil ask",
+      "valid_bip39": true,
+      "address": "z1qpd02qvtug3h6n7utj36tumqj8yn7778a093jj",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha256_A(C_rev):bit_offset_4:tail_6d8a3d601c",
+      "last4": "horn faint fix day",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key horn faint fix day",
+      "valid_bip39": true,
+      "address": "z1qztr02w3x5vevtj2n7aqyrxjltazp2ne54w96t",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "sha256(E):bit_offset_107:tail_f99ef2f143",
+      "last4": "wet wasp rough man",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key wet wasp rough man",
+      "valid_bip39": true,
+      "address": "z1qr627ul48jf65mcyg0hjzga3se9sht8v5zgmpt",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "sha256(E):bit_offset_121:tail_bcbc50e575",
+      "last4": "royal tip deer two",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key royal tip deer two",
+      "valid_bip39": true,
+      "address": "z1qqg7zan5l4qxedyt9rleekvz8v4g3r9klzyzwd",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "sha512(E):bit_offset_74:tail_9d0b8a06ca",
+      "last4": "other fox like net",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key other fox like net",
+      "valid_bip39": true,
+      "address": "z1qrph684lkes6vrwsn8ulpr5dfna7s23g5sxa3c",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "sha512(E):bit_offset_306:tail_e9e331ff11",
+      "last4": "try book lemon cat",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key try book lemon cat",
+      "valid_bip39": true,
+      "address": "z1qqkm5d4fpmluqj0xqazyt7zd2cxj37zqyemzna",
+      "matches_target": false
+    },
+    {
+      "model": "raw_44bit_bip39_tail",
+      "detail": "sha512(E):bit_offset_74:tail44_9d0b8a06ca5",
+      "last4": "other fox like net",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key other fox like net",
+      "valid_bip39": true,
+      "address": "z1qrph684lkes6vrwsn8ulpr5dfna7s23g5sxa3c",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha256_E(E):bit_offset_11:tail_10ed0066de",
+      "last4": "axis gym boost run",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key axis gym boost run",
+      "valid_bip39": true,
+      "address": "z1qrrsavxvm6x3hrhx5fqxtv75pe8xqclkcrq8fy",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha512_E(E):bit_offset_161:tail_ecfd3d09a4",
+      "last4": "undo try draw else",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key undo try draw else",
+      "valid_bip39": true,
+      "address": "z1qq7vk58x8lfzv2gefm4q09zr4pmfzaq0pr2gka",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha512_E(E):bit_offset_453:tail_0559ccdbe5",
+      "last4": "aim solar dad slim",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key aim solar dad slim",
+      "valid_bip39": true,
+      "address": "z1qzenmhkd3wrsy378pcgtcn3hhxpkr6h90s4rkd",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha256_A(E):bit_offset_146:tail_1df84a168c",
+      "last4": "bulb seat mad boil",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key bulb seat mad boil",
+      "valid_bip39": true,
+      "address": "z1qrfztf8nppktwzxz2c68vv7gykeutvtelwfzr2",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha256_A(E):bit_offset_157:tail_c250b461e1",
+      "last4": "seat mad blur sell",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key seat mad blur sell",
+      "valid_bip39": true,
+      "address": "z1qpvf26kuq8ezwmx503e83sj6g82q7mkw84905l",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha256_A(E):bit_offset_191:tail_86d2d707eb",
+      "last4": "man note sea stove",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key man note sea stove",
+      "valid_bip39": true,
+      "address": "z1qr7gg4w8x9uckt4qkqcuk68lavqgczhh9vgf2q",
+      "matches_target": false
+    },
+    {
+      "model": "raw_44bit_bip39_tail",
+      "detail": "hmac_sha256_A(E):bit_offset_157:tail44_c250b461e1b",
+      "last4": "seat mad blur sell",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key seat mad blur sell",
+      "valid_bip39": true,
+      "address": "z1qpvf26kuq8ezwmx503e83sj6g82q7mkw84905l",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "sha256(E_rev):bit_offset_132:tail_499ded267f",
+      "last4": "end urge end zebra",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key end urge end zebra",
+      "valid_bip39": true,
+      "address": "z1qzv8fxkcpplpyvp6wa35sf4t2wyp4c4mltsada",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "sha256(E_rev):bit_offset_136:tail_99ded267ff",
+      "last4": "oil walk okay year",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key oil walk okay year",
+      "valid_bip39": true,
+      "address": "z1qqva99cfq0k9pka4k88006yam5mg0hxy07282v",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "sha512(E_rev):bit_offset_268:tail_7c60a83563",
+      "last4": "ladder aim ask shy",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key ladder aim ask shy",
+      "valid_bip39": true,
+      "address": "z1qpadwv6cnr9e9adn3rg0sks5560mypqc8l2949",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "sha512(E_rev):bit_offset_279:tail_0541ab1f60",
+      "last4": "aim ask sick scene",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key aim ask sick scene",
+      "valid_bip39": true,
+      "address": "z1qplsw8pj9atulrqu64fr8aek4ms9tev8afvuqa",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha256_E(E_rev):bit_offset_172:tail_7deb005e34",
+      "last4": "law fix bleak hard",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key law fix bleak hard",
+      "valid_bip39": true,
+      "address": "z1qzhuc9065q6s6dltpm4rrw2dnxz5ps4gmqcgem",
+      "matches_target": false
+    },
+    {
+      "model": "raw_44bit_bip39_tail",
+      "detail": "hmac_sha256_E(E_rev):bit_offset_172:tail44_7deb005e349",
+      "last4": "law fix bleak hard",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key law fix bleak hard",
+      "valid_bip39": true,
+      "address": "z1qzhuc9065q6s6dltpm4rrw2dnxz5ps4gmqcgem",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha512_E(E_rev):bit_offset_7:tail_6b48138790",
+      "last4": "hero dog tiger can",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key hero dog tiger can",
+      "valid_bip39": true,
+      "address": "z1qzk6g4d64mxhqleq7rm2cr7zysqrwsvrzjql3s",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha512_E(E_rev):bit_offset_53:tail_78fd4c83f0",
+      "last4": "jump tuna can they",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key jump tuna can they",
+      "valid_bip39": true,
+      "address": "z1qrev48ytnkn7p7uuz7x2juk6qtutyall2qyvhk",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha512_E(E_rev):bit_offset_189:tail_43623d82b8",
+      "last4": "drop ball gaze ill",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key drop ball gaze ill",
+      "valid_bip39": true,
+      "address": "z1qq7utc3qt3lyxmwxhu5fdh552qdf0h5qy842vu",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha512_E(E_rev):bit_offset_190:tail_86c47b0570",
+      "last4": "man cat scout then",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key man cat scout then",
+      "valid_bip39": true,
+      "address": "z1qzq8q5rg5jhdjrsp028gm40q2lcklm7dhj8m9j",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha512_E(E_rev):bit_offset_200:tail_11ec15c2fc",
+      "last4": "ball gaze idle web",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key ball gaze idle web",
+      "valid_bip39": true,
+      "address": "z1qrakpmvp6mkcdfcqe7qlaq87qksffvv9ewt6rf",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha512_E(E_rev):bit_offset_233:tail_f9d4da5ec1",
+      "last4": "what plug nut load",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key what plug nut load",
+      "valid_bip39": true,
+      "address": "z1qpa3nghplrkqc7gyfp0fh5f0zh7uxv2j9x8sxg",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha512_E(E_rev):bit_offset_427:tail_aeacc4337c",
+      "last4": "push great art web",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key push great art web",
+      "valid_bip39": true,
+      "address": "z1qpvu4yq28csxv4xkclmyfy375pkww7hf6q78m5",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha256_A(E_rev):bit_offset_5:tail_67c8756959",
+      "last4": "guitar dry fog raw",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key guitar dry fog raw",
+      "valid_bip39": true,
+      "address": "z1qrn5d3sq4ag7535vky0h22t095rkkza64ccgcz",
+      "matches_target": false
+    },
+    {
+      "model": "known_prefix_plus_40bit_tail",
+      "detail": "hmac_sha256_A(E_rev):bit_offset_174:tail_1631fa3e71",
+      "last4": "bike more moon toe",
+      "plaintext_bytes": 18,
+      "mnemonic": "oblige dilemma hurry disorder happy spoil shiver key bike more moon toe",
+      "valid_bip39": true,
+      "address": "z1qqmfdfxr60aggql8lef0n07d2sz6sgrfpml4dt",
+      "matches_target": false
+    }
+  ]
+}

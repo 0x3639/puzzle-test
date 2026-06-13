@@ -1,0 +1,20 @@
+{
+  "shape": {
+    "B_len": 18,
+    "A_len": 16,
+    "B_plus_A_len": 34,
+    "ciphertext_len_if_16_byte_tag": 18,
+    "tag_len": 16
+  },
+  "parameters": {
+    "cipher_splits": 4,
+    "nonce_candidates": 168,
+    "passwords": 24,
+    "keys": 120,
+    "aad_candidates": 5,
+    "include_argon2": true
+  },
+  "attempts": 403200,
+  "hits": [],
+  "bip39_word_hits": []
+}
