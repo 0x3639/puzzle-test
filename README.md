@@ -1,8 +1,8 @@
 # Zenon Puzzle Test
 
-This repo collects the current working notes, data, scripts, and CUDA scaffold for testing the Zenon 12-word treasure hunt theory.
+This branch runs the full BIP39 four-word tail search: all `2048^4` ordered missing-word combinations.
 
-The theory being tested is narrow:
+The earlier exact-18-byte theory searched only the words that can fit this constraint:
 
 ```text
 B + A = 34 bytes
@@ -23,12 +23,12 @@ Target Zenon address:
 z1qrn3jeapt848zxg3akf2ewhrxxwsa945sj798s
 ```
 
-The full byte-length-constrained BIP39 search is large:
+The full wordlist search is much larger:
 
 ```text
-participating BIP39 words: 1,608
-ordered exact-length four-word tails: 69,026,912,600
-expected BIP39-checksum-valid phrases: about 4.31B
+participating BIP39 words: 2,048
+ordered four-word tails: 17,592,186,044,416
+expected BIP39-checksum-valid phrases: 1,099,511,627,776
 ```
 
 ## Current Status
@@ -37,7 +37,7 @@ What works now:
 
 - CPU scripts can reproduce the puzzle analysis and run bounded brute-force searches.
 - The target Zenon address derivation is implemented in Python.
-- The CUDA program can enumerate exact-length candidates and run the BIP39 checksum gate on GPU.
+- The CUDA program can enumerate candidates and run the BIP39 checksum gate on GPU.
 - The CUDA program has a validation-gated Zenon address oracle mode.
 - The CUDA smoke test is pinned to Python validation vectors.
 
@@ -79,7 +79,7 @@ out/
 Use Python 3.10 or newer.
 
 ```sh
-git clone --branch codex/zenon-cuda-kernel https://github.com/0x3639/puzzle-test.git
+git clone --branch codex/full-wordlist-gpu-search https://github.com/0x3639/puzzle-test.git
 cd puzzle-test
 
 python3 -m venv .venv
@@ -119,7 +119,7 @@ python3 scripts/constrained_seedword_bruteforce.py \
   --output-stem constrained_seedword_bruteforce_length_dry_run
 ```
 
-Expected scale for the full length-constrained theory:
+Expected scale for the full exact-18-byte CPU theory:
 
 ```text
 total_exact_length_combinations: 69026912600
@@ -183,7 +183,7 @@ python3 scripts/summarize_bruteforce_shards.py \
 
 ## GPU Setup
 
-The GPU code lives in `gpu/`. It is currently a checksum kernel, not the full address brute force.
+The GPU code lives in `gpu/`. It has both checksum and address-oracle modes.
 
 Generate the workload files:
 
@@ -211,9 +211,9 @@ Expected output fields:
 
 ```text
 "stage": "bip39_checksum_only"
-"checksum_valid": 643
-"first_valid_global": 9
-"first_valid_tail_indices": [19, 19, 19, 28]
+"checksum_valid": 625
+"first_valid_global": 0
+"first_valid_tail_indices": [0, 0, 0, 0]
 ```
 
 Run a larger checksum benchmark:
@@ -231,7 +231,7 @@ Use a CUDA devel image, for example an Ubuntu CUDA 12 devel image. A CUDA runtim
 On a fresh pod, this is the easiest path:
 
 ```sh
-git clone --branch codex/zenon-cuda-kernel https://github.com/0x3639/puzzle-test.git
+git clone --branch codex/full-wordlist-gpu-search https://github.com/0x3639/puzzle-test.git
 cd puzzle-test
 bash runpod/run.sh smoke
 ```
@@ -241,9 +241,9 @@ The script installs missing apt packages when possible, creates `.venv`, install
 Expected smoke-test fields:
 
 ```text
-"checksum_valid": 643
-"first_valid_global": 9
-"first_valid_tail_indices": [19, 19, 19, 28]
+"checksum_valid": 625
+"first_valid_global": 0
+"first_valid_tail_indices": [0, 0, 0, 0]
 ```
 
 Run a default 100,000,000-candidate checksum benchmark:
@@ -258,7 +258,7 @@ Run a custom range:
 bash runpod/run.sh range 500000000 100000000
 ```
 
-Run the address-oracle validation vector:
+This branch defaults to full-wordlist mode. Run the address-oracle validation vector:
 
 ```sh
 bash runpod/run.sh oracle-test
@@ -278,13 +278,29 @@ bash runpod/run.sh full-address
 
 A target hit will print `"hit_found": true` and a `hit_mnemonic`.
 
+Full-wordlist ETA depends on `address_derivations_per_second` from your own Blackwell benchmark:
+
+```text
+ETA seconds = 1,099,511,627,776 / address_derivations_per_second
+```
+
+Reference table:
+
+```text
+1,000 derivations/sec      about 34.9 years
+10,000 derivations/sec     about 3.5 years
+100,000 derivations/sec    about 127 days
+1,000,000 derivations/sec  about 12.7 days
+10,000,000 derivations/sec about 30.5 hours
+```
+
 Run the full checksum batch in chunks:
 
 ```sh
 bash runpod/run.sh full
 ```
 
-This scans all `69,026,912,600` exact-length candidates through the current checksum-only GPU stage and writes chunk results to `out/runpod_full_<timestamp>.jsonl`.
+This scans all `17,592,186,044,416` candidates through the current checksum-only GPU stage and writes chunk results to `out/runpod_full_<timestamp>.jsonl`.
 
 Resume from an offset:
 
@@ -302,7 +318,7 @@ Good coverage looks like:
 
 ```text
 "full_space_covered": true
-"candidate_count_sum": 69026912600
+"candidate_count_sum": 17592186044416
 "gap_count": 0
 "overlap_count": 0
 ```
@@ -367,7 +383,7 @@ The JSON files are machine-readable. The Markdown files are easier to skim.
 
 For brute-force JSON outputs:
 
-- `combos_seen`: exact-length four-word tails tested.
+- `combos_seen`: four-word tails tested.
 - `checksum_valid_phrases`: candidates that passed BIP39 checksum.
 - `address_derivations`: Zenon address derivations performed.
 - `hits`: matching target-address candidates. Empty means no hit in that run.

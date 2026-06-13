@@ -95,6 +95,14 @@ def participating_words(words: list[str], plaintext_bytes: int) -> dict[int, lis
     return grouped
 
 
+def all_words_by_length(words: list[str]) -> dict[int, list[dict]]:
+    word_to_index = {word: index for index, word in enumerate(words)}
+    grouped: dict[int, list[dict]] = {}
+    for word in words:
+        grouped.setdefault(len(word), []).append({"word": word, "index": word_to_index[word]})
+    return dict(sorted(grouped.items()))
+
+
 def length_patterns(grouped: dict[int, list[dict]], plaintext_bytes: int) -> list[dict]:
     target_sum = plaintext_bytes - 3
     lengths = sorted(grouped)
@@ -124,17 +132,30 @@ def length_patterns(grouped: dict[int, list[dict]], plaintext_bytes: int) -> lis
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--plaintext-bytes", type=int, default=18)
+    parser.add_argument(
+        "--word-mode",
+        choices=["exact18", "all"],
+        default="all",
+        help="exact18 keeps the 18-byte missing-words constraint; all searches all 2048^4 tails",
+    )
     parser.add_argument("--target-address", default=TARGET_ADDRESS)
     parser.add_argument("--output", default=str(OUT / "gpu_workload.json"))
     args = parser.parse_args()
 
     words = load_words()
     word_to_index = {word: index for index, word in enumerate(words)}
-    grouped = participating_words(words, args.plaintext_bytes)
-    patterns = length_patterns(grouped, args.plaintext_bytes)
+    if args.word_mode == "all":
+        grouped = all_words_by_length(words)
+        patterns = []
+        total_combinations = 2048**4
+    else:
+        grouped = participating_words(words, args.plaintext_bytes)
+        patterns = length_patterns(grouped, args.plaintext_bytes)
+        total_combinations = sum(pattern["combinations"] for pattern in patterns)
     target_core = decode_zenon_core(args.target_address)
 
     workload = {
+        "search_mode": args.word_mode,
         "known_words": KNOWN_WORDS,
         "known_indices": [word_to_index[word] for word in KNOWN_WORDS],
         "target_address": args.target_address,
@@ -143,8 +164,9 @@ def main() -> None:
         "words_by_length": grouped,
         "length_distribution": {length: len(items) for length, items in grouped.items()},
         "length_patterns": patterns,
-        "total_exact_length_combinations": sum(pattern["combinations"] for pattern in patterns),
-        "expected_checksum_valid": sum(pattern["combinations"] for pattern in patterns) / 16,
+        "total_combinations": total_combinations,
+        "total_exact_length_combinations": total_combinations,
+        "expected_checksum_valid": total_combinations / 16,
         "validation_vectors": {
             "c_tail_mnemonic": (
                 "oblige dilemma hurry disorder happy spoil shiver key "
@@ -160,6 +182,16 @@ def main() -> None:
             "python_first_10000_first_valid_entropy_hex": "9827c5be9fb68fa4b18bd002604c0981",
             "python_first_valid_address": "z1qq6a32rut3yw9ar8tfa4nape698mzhdjyxkmpq",
             "python_first_valid_core_hex": "0035d8a87c5c48e2f4675a7b59f439d14fb15db2",
+            "all_first_10000_checksum_valid": 625,
+            "all_first_10000_first_valid_global": 0,
+            "all_first_10000_first_valid_tail_indices": [0, 0, 0, 0],
+            "all_first_10000_first_valid_tail_words": [
+                "abandon",
+                "abandon",
+                "abandon",
+                "abandon",
+            ],
+            "all_first_10000_first_valid_entropy_hex": "9827c5be9fb68fa4b18bd00000000000",
         },
     }
 
@@ -169,14 +201,20 @@ def main() -> None:
     output.parent.mkdir(exist_ok=True)
     output.write_text(json.dumps(workload, indent=2) + "\n")
     print(json.dumps({k: workload[k] for k in (
+        "search_mode",
         "target_address",
         "target_core_hex",
         "plaintext_bytes",
         "length_distribution",
+        "total_combinations",
         "total_exact_length_combinations",
         "expected_checksum_valid",
     )}, indent=2))
-    print(f"Wrote {output.relative_to(ROOT)}")
+    try:
+        display_output = output.relative_to(ROOT)
+    except ValueError:
+        display_output = output
+    print(f"Wrote {display_output}")
 
 
 if __name__ == "__main__":

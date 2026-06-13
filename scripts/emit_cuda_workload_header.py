@@ -15,6 +15,8 @@ WORDLIST = ROOT / "data" / "bip39_english.txt"
 
 
 def c_array(values: list[int], c_type: str, name: str, per_line: int = 12) -> list[str]:
+    if not values:
+        values = [0]
     lines = [f"ZENON_GPU_DEVICE_ARRAY {c_type} {name}[] = {{"]
     for index in range(0, len(values), per_line):
         chunk = values[index : index + per_line]
@@ -53,6 +55,9 @@ def main() -> None:
         for length, rows in workload["words_by_length"].items()
     }
     patterns = workload["length_patterns"]
+    total_combinations = workload.get(
+        "total_combinations", workload["total_exact_length_combinations"]
+    )
     target_core = bytes.fromhex(workload["target_core_hex"])
     first_valid_core = bytes.fromhex(
         workload["validation_vectors"]["python_first_valid_core_hex"]
@@ -83,7 +88,8 @@ def main() -> None:
         "",
         "namespace zenon_gpu_workload {",
         "",
-        f"static constexpr uint64_t kTotalCombinations = {workload['total_exact_length_combinations']}ULL;",
+        f"static constexpr int kSearchModeAllWords = {1 if workload.get('search_mode') == 'all' else 0};",
+        f"static constexpr uint64_t kTotalCombinations = {total_combinations}ULL;",
         f"static constexpr int kPlaintextBytes = {workload['plaintext_bytes']};",
         f"static constexpr int kPatternCount = {len(patterns)};",
         "",

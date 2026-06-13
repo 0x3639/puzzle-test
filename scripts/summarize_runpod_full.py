@@ -25,7 +25,8 @@ def default_path() -> Path:
 def expected_total() -> int | None:
     if not WORKLOAD.exists():
         return None
-    return json.loads(WORKLOAD.read_text()).get("total_exact_length_combinations")
+    workload = json.loads(WORKLOAD.read_text())
+    return workload.get("total_combinations", workload.get("total_exact_length_combinations"))
 
 
 def load_rows(path: Path) -> list[dict]:

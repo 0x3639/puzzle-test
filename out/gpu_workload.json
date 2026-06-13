@@ -1,4 +1,5 @@
 {
+  "search_mode": "all",
   "known_words": [
     "oblige",
     "dilemma",
@@ -6462,218 +6463,1784 @@
         "word": "yellow",
         "index": 2040
       }
+    ],
+    "7": [
+      {
+        "word": "abandon",
+        "index": 0
+      },
+      {
+        "word": "ability",
+        "index": 1
+      },
+      {
+        "word": "account",
+        "index": 12
+      },
+      {
+        "word": "achieve",
+        "index": 14
+      },
+      {
+        "word": "acquire",
+        "index": 17
+      },
+      {
+        "word": "actress",
+        "index": 22
+      },
+      {
+        "word": "address",
+        "index": 27
+      },
+      {
+        "word": "advance",
+        "index": 31
+      },
+      {
+        "word": "aerobic",
+        "index": 33
+      },
+      {
+        "word": "airport",
+        "index": 44
+      },
+      {
+        "word": "alcohol",
+        "index": 48
+      },
+      {
+        "word": "already",
+        "index": 57
+      },
+      {
+        "word": "amateur",
+        "index": 61
+      },
+      {
+        "word": "amazing",
+        "index": 62
+      },
+      {
+        "word": "analyst",
+        "index": 66
+      },
+      {
+        "word": "ancient",
+        "index": 68
+      },
+      {
+        "word": "another",
+        "index": 76
+      },
+      {
+        "word": "antenna",
+        "index": 78
+      },
+      {
+        "word": "antique",
+        "index": 79
+      },
+      {
+        "word": "anxiety",
+        "index": 80
+      },
+      {
+        "word": "apology",
+        "index": 83
+      },
+      {
+        "word": "approve",
+        "index": 86
+      },
+      {
+        "word": "arrange",
+        "index": 98
+      },
+      {
+        "word": "artwork",
+        "index": 105
+      },
+      {
+        "word": "assault",
+        "index": 108
+      },
+      {
+        "word": "athlete",
+        "index": 113
+      },
+      {
+        "word": "attract",
+        "index": 118
+      },
+      {
+        "word": "auction",
+        "index": 119
+      },
+      {
+        "word": "average",
+        "index": 126
+      },
+      {
+        "word": "avocado",
+        "index": 127
+      },
+      {
+        "word": "awesome",
+        "index": 132
+      },
+      {
+        "word": "awkward",
+        "index": 134
+      },
+      {
+        "word": "balance",
+        "index": 141
+      },
+      {
+        "word": "balcony",
+        "index": 142
+      },
+      {
+        "word": "bargain",
+        "index": 149
+      },
+      {
+        "word": "because",
+        "index": 158
+      },
+      {
+        "word": "believe",
+        "index": 165
+      },
+      {
+        "word": "benefit",
+        "index": 169
+      },
+      {
+        "word": "between",
+        "index": 173
+      },
+      {
+        "word": "bicycle",
+        "index": 175
+      },
+      {
+        "word": "biology",
+        "index": 179
+      },
+      {
+        "word": "blanket",
+        "index": 186
+      },
+      {
+        "word": "blossom",
+        "index": 192
+      },
+      {
+        "word": "bracket",
+        "index": 214
+      },
+      {
+        "word": "brother",
+        "index": 231
+      },
+      {
+        "word": "buffalo",
+        "index": 237
+      },
+      {
+        "word": "cabbage",
+        "index": 253
+      },
+      {
+        "word": "capable",
+        "index": 271
+      },
+      {
+        "word": "capital",
+        "index": 272
+      },
+      {
+        "word": "captain",
+        "index": 273
+      },
+      {
+        "word": "catalog",
+        "index": 287
+      },
+      {
+        "word": "caution",
+        "index": 293
+      },
+      {
+        "word": "ceiling",
+        "index": 295
+      },
+      {
+        "word": "century",
+        "index": 299
+      },
+      {
+        "word": "certain",
+        "index": 301
+      },
+      {
+        "word": "chapter",
+        "index": 307
+      },
+      {
+        "word": "chicken",
+        "index": 317
+      },
+      {
+        "word": "chimney",
+        "index": 320
+      },
+      {
+        "word": "chronic",
+        "index": 323
+      },
+      {
+        "word": "chuckle",
+        "index": 324
+      },
+      {
+        "word": "citizen",
+        "index": 330
+      },
+      {
+        "word": "clarify",
+        "index": 335
+      },
+      {
+        "word": "cluster",
+        "index": 355
+      },
+      {
+        "word": "coconut",
+        "index": 359
+      },
+      {
+        "word": "collect",
+        "index": 364
+      },
+      {
+        "word": "combine",
+        "index": 367
+      },
+      {
+        "word": "comfort",
+        "index": 369
+      },
+      {
+        "word": "company",
+        "index": 372
+      },
+      {
+        "word": "concert",
+        "index": 373
+      },
+      {
+        "word": "conduct",
+        "index": 374
+      },
+      {
+        "word": "confirm",
+        "index": 375
+      },
+      {
+        "word": "connect",
+        "index": 377
+      },
+      {
+        "word": "control",
+        "index": 379
+      },
+      {
+        "word": "correct",
+        "index": 388
+      },
+      {
+        "word": "country",
+        "index": 392
+      },
+      {
+        "word": "cricket",
+        "index": 411
+      },
+      {
+        "word": "crucial",
+        "index": 419
+      },
+      {
+        "word": "crumble",
+        "index": 422
+      },
+      {
+        "word": "crystal",
+        "index": 426
+      },
+      {
+        "word": "culture",
+        "index": 428
+      },
+      {
+        "word": "curious",
+        "index": 431
+      },
+      {
+        "word": "current",
+        "index": 432
+      },
+      {
+        "word": "curtain",
+        "index": 433
+      },
+      {
+        "word": "cushion",
+        "index": 435
+      },
+      {
+        "word": "decline",
+        "index": 455
+      },
+      {
+        "word": "defense",
+        "index": 459
+      },
+      {
+        "word": "deliver",
+        "index": 464
+      },
+      {
+        "word": "dentist",
+        "index": 468
+      },
+      {
+        "word": "deposit",
+        "index": 472
+      },
+      {
+        "word": "despair",
+        "index": 480
+      },
+      {
+        "word": "destroy",
+        "index": 481
+      },
+      {
+        "word": "develop",
+        "index": 484
+      },
+      {
+        "word": "diagram",
+        "index": 487
+      },
+      {
+        "word": "diamond",
+        "index": 489
+      },
+      {
+        "word": "digital",
+        "index": 495
+      },
+      {
+        "word": "dignity",
+        "index": 496
+      },
+      {
+        "word": "dilemma",
+        "index": 497
+      },
+      {
+        "word": "disease",
+        "index": 504
+      },
+      {
+        "word": "dismiss",
+        "index": 506
+      },
+      {
+        "word": "display",
+        "index": 508
+      },
+      {
+        "word": "divorce",
+        "index": 512
+      },
+      {
+        "word": "dolphin",
+        "index": 518
+      },
+      {
+        "word": "drastic",
+        "index": 530
+      },
+      {
+        "word": "dynamic",
+        "index": 550
+      },
+      {
+        "word": "ecology",
+        "index": 560
+      },
+      {
+        "word": "economy",
+        "index": 561
+      },
+      {
+        "word": "educate",
+        "index": 564
+      },
+      {
+        "word": "elegant",
+        "index": 572
+      },
+      {
+        "word": "element",
+        "index": 573
+      },
+      {
+        "word": "embrace",
+        "index": 580
+      },
+      {
+        "word": "emotion",
+        "index": 582
+      },
+      {
+        "word": "empower",
+        "index": 584
+      },
+      {
+        "word": "endless",
+        "index": 589
+      },
+      {
+        "word": "endorse",
+        "index": 590
+      },
+      {
+        "word": "enforce",
+        "index": 593
+      },
+      {
+        "word": "enhance",
+        "index": 596
+      },
+      {
+        "word": "episode",
+        "index": 607
+      },
+      {
+        "word": "erosion",
+        "index": 613
+      },
+      {
+        "word": "essence",
+        "index": 618
+      },
+      {
+        "word": "eternal",
+        "index": 620
+      },
+      {
+        "word": "example",
+        "index": 627
+      },
+      {
+        "word": "exclude",
+        "index": 631
+      },
+      {
+        "word": "execute",
+        "index": 633
+      },
+      {
+        "word": "exhaust",
+        "index": 635
+      },
+      {
+        "word": "exhibit",
+        "index": 636
+      },
+      {
+        "word": "explain",
+        "index": 644
+      },
+      {
+        "word": "express",
+        "index": 646
+      },
+      {
+        "word": "eyebrow",
+        "index": 650
+      },
+      {
+        "word": "faculty",
+        "index": 653
+      },
+      {
+        "word": "fantasy",
+        "index": 664
+      },
+      {
+        "word": "fashion",
+        "index": 666
+      },
+      {
+        "word": "fatigue",
+        "index": 670
+      },
+      {
+        "word": "feature",
+        "index": 673
+      },
+      {
+        "word": "federal",
+        "index": 675
+      },
+      {
+        "word": "fiction",
+        "index": 686
+      },
+      {
+        "word": "fitness",
+        "index": 703
+      },
+      {
+        "word": "fortune",
+        "index": 732
+      },
+      {
+        "word": "forward",
+        "index": 734
+      },
+      {
+        "word": "fragile",
+        "index": 739
+      },
+      {
+        "word": "furnace",
+        "index": 754
+      },
+      {
+        "word": "gallery",
+        "index": 760
+      },
+      {
+        "word": "garbage",
+        "index": 764
+      },
+      {
+        "word": "garment",
+        "index": 767
+      },
+      {
+        "word": "general",
+        "index": 774
+      },
+      {
+        "word": "genuine",
+        "index": 778
+      },
+      {
+        "word": "gesture",
+        "index": 779
+      },
+      {
+        "word": "giraffe",
+        "index": 785
+      },
+      {
+        "word": "glimpse",
+        "index": 793
+      },
+      {
+        "word": "goddess",
+        "index": 801
+      },
+      {
+        "word": "gorilla",
+        "index": 805
+      },
+      {
+        "word": "gravity",
+        "index": 816
+      },
+      {
+        "word": "grocery",
+        "index": 822
+      },
+      {
+        "word": "hamster",
+        "index": 837
+      },
+      {
+        "word": "harvest",
+        "index": 843
+      },
+      {
+        "word": "history",
+        "index": 865
+      },
+      {
+        "word": "holiday",
+        "index": 870
+      },
+      {
+        "word": "hundred",
+        "index": 889
+      },
+      {
+        "word": "husband",
+        "index": 895
+      },
+      {
+        "word": "illegal",
+        "index": 904
+      },
+      {
+        "word": "illness",
+        "index": 905
+      },
+      {
+        "word": "imitate",
+        "index": 907
+      },
+      {
+        "word": "immense",
+        "index": 908
+      },
+      {
+        "word": "improve",
+        "index": 912
+      },
+      {
+        "word": "impulse",
+        "index": 913
+      },
+      {
+        "word": "include",
+        "index": 915
+      },
+      {
+        "word": "inflict",
+        "index": 923
+      },
+      {
+        "word": "inherit",
+        "index": 926
+      },
+      {
+        "word": "initial",
+        "index": 927
+      },
+      {
+        "word": "inquiry",
+        "index": 934
+      },
+      {
+        "word": "inspire",
+        "index": 938
+      },
+      {
+        "word": "install",
+        "index": 939
+      },
+      {
+        "word": "involve",
+        "index": 945
+      },
+      {
+        "word": "isolate",
+        "index": 948
+      },
+      {
+        "word": "jealous",
+        "index": 956
+      },
+      {
+        "word": "journey",
+        "index": 963
+      },
+      {
+        "word": "ketchup",
+        "index": 975
+      },
+      {
+        "word": "kingdom",
+        "index": 981
+      },
+      {
+        "word": "kitchen",
+        "index": 984
+      },
+      {
+        "word": "laundry",
+        "index": 1005
+      },
+      {
+        "word": "lawsuit",
+        "index": 1009
+      },
+      {
+        "word": "lecture",
+        "index": 1016
+      },
+      {
+        "word": "leisure",
+        "index": 1021
+      },
+      {
+        "word": "leopard",
+        "index": 1026
+      },
+      {
+        "word": "liberty",
+        "index": 1031
+      },
+      {
+        "word": "library",
+        "index": 1032
+      },
+      {
+        "word": "license",
+        "index": 1033
+      },
+      {
+        "word": "lobster",
+        "index": 1049
+      },
+      {
+        "word": "lottery",
+        "index": 1056
+      },
+      {
+        "word": "luggage",
+        "index": 1062
+      },
+      {
+        "word": "machine",
+        "index": 1068
+      },
+      {
+        "word": "mandate",
+        "index": 1080
+      },
+      {
+        "word": "mansion",
+        "index": 1082
+      },
+      {
+        "word": "maximum",
+        "index": 1099
+      },
+      {
+        "word": "measure",
+        "index": 1103
+      },
+      {
+        "word": "mention",
+        "index": 1112
+      },
+      {
+        "word": "message",
+        "index": 1119
+      },
+      {
+        "word": "million",
+        "index": 1125
+      },
+      {
+        "word": "minimum",
+        "index": 1128
+      },
+      {
+        "word": "miracle",
+        "index": 1131
+      },
+      {
+        "word": "mistake",
+        "index": 1135
+      },
+      {
+        "word": "mixture",
+        "index": 1138
+      },
+      {
+        "word": "monitor",
+        "index": 1144
+      },
+      {
+        "word": "monster",
+        "index": 1146
+      },
+      {
+        "word": "morning",
+        "index": 1151
+      },
+      {
+        "word": "mystery",
+        "index": 1171
+      },
+      {
+        "word": "neglect",
+        "index": 1184
+      },
+      {
+        "word": "neither",
+        "index": 1185
+      },
+      {
+        "word": "network",
+        "index": 1190
+      },
+      {
+        "word": "neutral",
+        "index": 1191
+      },
+      {
+        "word": "nominee",
+        "index": 1199
+      },
+      {
+        "word": "notable",
+        "index": 1204
+      },
+      {
+        "word": "nothing",
+        "index": 1206
+      },
+      {
+        "word": "nuclear",
+        "index": 1210
+      },
+      {
+        "word": "obscure",
+        "index": 1218
+      },
+      {
+        "word": "observe",
+        "index": 1219
+      },
+      {
+        "word": "obvious",
+        "index": 1221
+      },
+      {
+        "word": "october",
+        "index": 1224
+      },
+      {
+        "word": "olympic",
+        "index": 1234
+      },
+      {
+        "word": "opinion",
+        "index": 1243
+      },
+      {
+        "word": "orchard",
+        "index": 1248
+      },
+      {
+        "word": "ostrich",
+        "index": 1255
+      },
+      {
+        "word": "outdoor",
+        "index": 1257
+      },
+      {
+        "word": "outside",
+        "index": 1260
+      },
+      {
+        "word": "panther",
+        "index": 1278
+      },
+      {
+        "word": "patient",
+        "index": 1288
+      },
+      {
+        "word": "pattern",
+        "index": 1290
+      },
+      {
+        "word": "payment",
+        "index": 1293
+      },
+      {
+        "word": "peasant",
+        "index": 1297
+      },
+      {
+        "word": "pelican",
+        "index": 1298
+      },
+      {
+        "word": "penalty",
+        "index": 1300
+      },
+      {
+        "word": "perfect",
+        "index": 1304
+      },
+      {
+        "word": "picture",
+        "index": 1314
+      },
+      {
+        "word": "pioneer",
+        "index": 1321
+      },
+      {
+        "word": "plastic",
+        "index": 1328
+      },
+      {
+        "word": "popular",
+        "index": 1345
+      },
+      {
+        "word": "portion",
+        "index": 1346
+      },
+      {
+        "word": "pottery",
+        "index": 1351
+      },
+      {
+        "word": "poverty",
+        "index": 1352
+      },
+      {
+        "word": "predict",
+        "index": 1357
+      },
+      {
+        "word": "prepare",
+        "index": 1359
+      },
+      {
+        "word": "present",
+        "index": 1360
+      },
+      {
+        "word": "prevent",
+        "index": 1362
+      },
+      {
+        "word": "primary",
+        "index": 1365
+      },
+      {
+        "word": "private",
+        "index": 1369
+      },
+      {
+        "word": "problem",
+        "index": 1371
+      },
+      {
+        "word": "process",
+        "index": 1372
+      },
+      {
+        "word": "produce",
+        "index": 1373
+      },
+      {
+        "word": "program",
+        "index": 1375
+      },
+      {
+        "word": "project",
+        "index": 1376
+      },
+      {
+        "word": "promote",
+        "index": 1377
+      },
+      {
+        "word": "prosper",
+        "index": 1380
+      },
+      {
+        "word": "protect",
+        "index": 1381
+      },
+      {
+        "word": "provide",
+        "index": 1383
+      },
+      {
+        "word": "pudding",
+        "index": 1385
+      },
+      {
+        "word": "pumpkin",
+        "index": 1389
+      },
+      {
+        "word": "purpose",
+        "index": 1395
+      },
+      {
+        "word": "pyramid",
+        "index": 1400
+      },
+      {
+        "word": "quality",
+        "index": 1401
+      },
+      {
+        "word": "quantum",
+        "index": 1402
+      },
+      {
+        "word": "quarter",
+        "index": 1403
+      },
+      {
+        "word": "raccoon",
+        "index": 1410
+      },
+      {
+        "word": "rebuild",
+        "index": 1434
+      },
+      {
+        "word": "receive",
+        "index": 1436
+      },
+      {
+        "word": "recycle",
+        "index": 1439
+      },
+      {
+        "word": "reflect",
+        "index": 1441
+      },
+      {
+        "word": "regular",
+        "index": 1446
+      },
+      {
+        "word": "release",
+        "index": 1449
+      },
+      {
+        "word": "replace",
+        "index": 1462
+      },
+      {
+        "word": "require",
+        "index": 1464
+      },
+      {
+        "word": "retreat",
+        "index": 1472
+      },
+      {
+        "word": "reunion",
+        "index": 1474
+      },
+      {
+        "word": "romance",
+        "index": 1500
+      },
+      {
+        "word": "sadness",
+        "index": 1519
+      },
+      {
+        "word": "satisfy",
+        "index": 1530
+      },
+      {
+        "word": "satoshi",
+        "index": 1531
+      },
+      {
+        "word": "sausage",
+        "index": 1533
+      },
+      {
+        "word": "scatter",
+        "index": 1539
+      },
+      {
+        "word": "science",
+        "index": 1543
+      },
+      {
+        "word": "section",
+        "index": 1557
+      },
+      {
+        "word": "segment",
+        "index": 1561
+      },
+      {
+        "word": "seminar",
+        "index": 1564
+      },
+      {
+        "word": "service",
+        "index": 1569
+      },
+      {
+        "word": "session",
+        "index": 1570
+      },
+      {
+        "word": "shallow",
+        "index": 1576
+      },
+      {
+        "word": "sheriff",
+        "index": 1580
+      },
+      {
+        "word": "shuffle",
+        "index": 1595
+      },
+      {
+        "word": "sibling",
+        "index": 1597
+      },
+      {
+        "word": "similar",
+        "index": 1607
+      },
+      {
+        "word": "situate",
+        "index": 1613
+      },
+      {
+        "word": "slender",
+        "index": 1626
+      },
+      {
+        "word": "soldier",
+        "index": 1652
+      },
+      {
+        "word": "someone",
+        "index": 1656
+      },
+      {
+        "word": "spatial",
+        "index": 1668
+      },
+      {
+        "word": "special",
+        "index": 1671
+      },
+      {
+        "word": "sponsor",
+        "index": 1683
+      },
+      {
+        "word": "squeeze",
+        "index": 1692
+      },
+      {
+        "word": "stadium",
+        "index": 1695
+      },
+      {
+        "word": "stomach",
+        "index": 1713
+      },
+      {
+        "word": "student",
+        "index": 1723
+      },
+      {
+        "word": "stumble",
+        "index": 1725
+      },
+      {
+        "word": "subject",
+        "index": 1727
+      },
+      {
+        "word": "success",
+        "index": 1730
+      },
+      {
+        "word": "suggest",
+        "index": 1735
+      },
+      {
+        "word": "supreme",
+        "index": 1743
+      },
+      {
+        "word": "surface",
+        "index": 1745
+      },
+      {
+        "word": "suspect",
+        "index": 1750
+      },
+      {
+        "word": "sustain",
+        "index": 1751
+      },
+      {
+        "word": "swallow",
+        "index": 1752
+      },
+      {
+        "word": "symptom",
+        "index": 1764
+      },
+      {
+        "word": "thought",
+        "index": 1799
+      },
+      {
+        "word": "thunder",
+        "index": 1804
+      },
+      {
+        "word": "tobacco",
+        "index": 1817
+      },
+      {
+        "word": "toddler",
+        "index": 1819
+      },
+      {
+        "word": "tonight",
+        "index": 1828
+      },
+      {
+        "word": "tornado",
+        "index": 1835
+      },
+      {
+        "word": "tourist",
+        "index": 1839
+      },
+      {
+        "word": "traffic",
+        "index": 1846
+      },
+      {
+        "word": "trigger",
+        "index": 1860
+      },
+      {
+        "word": "trouble",
+        "index": 1864
+      },
+      {
+        "word": "trumpet",
+        "index": 1868
+      },
+      {
+        "word": "tuition",
+        "index": 1873
+      },
+      {
+        "word": "typical",
+        "index": 1887
+      },
+      {
+        "word": "unaware",
+        "index": 1891
+      },
+      {
+        "word": "uncover",
+        "index": 1893
+      },
+      {
+        "word": "unhappy",
+        "index": 1898
+      },
+      {
+        "word": "uniform",
+        "index": 1899
+      },
+      {
+        "word": "unknown",
+        "index": 1903
+      },
+      {
+        "word": "unusual",
+        "index": 1906
+      },
+      {
+        "word": "upgrade",
+        "index": 1909
+      },
+      {
+        "word": "useless",
+        "index": 1920
+      },
+      {
+        "word": "utility",
+        "index": 1922
+      },
+      {
+        "word": "various",
+        "index": 1932
+      },
+      {
+        "word": "vehicle",
+        "index": 1935
+      },
+      {
+        "word": "venture",
+        "index": 1938
+      },
+      {
+        "word": "version",
+        "index": 1942
+      },
+      {
+        "word": "veteran",
+        "index": 1945
+      },
+      {
+        "word": "vibrant",
+        "index": 1947
+      },
+      {
+        "word": "vicious",
+        "index": 1948
+      },
+      {
+        "word": "victory",
+        "index": 1949
+      },
+      {
+        "word": "village",
+        "index": 1952
+      },
+      {
+        "word": "vintage",
+        "index": 1953
+      },
+      {
+        "word": "virtual",
+        "index": 1955
+      },
+      {
+        "word": "volcano",
+        "index": 1965
+      },
+      {
+        "word": "warfare",
+        "index": 1976
+      },
+      {
+        "word": "warrior",
+        "index": 1978
+      },
+      {
+        "word": "weather",
+        "index": 1989
+      },
+      {
+        "word": "wedding",
+        "index": 1991
+      },
+      {
+        "word": "weekend",
+        "index": 1992
+      },
+      {
+        "word": "welcome",
+        "index": 1994
+      },
+      {
+        "word": "whisper",
+        "index": 2004
+      },
+      {
+        "word": "witness",
+        "index": 2021
+      },
+      {
+        "word": "wrestle",
+        "index": 2034
+      }
+    ],
+    "8": [
+      {
+        "word": "abstract",
+        "index": 7
+      },
+      {
+        "word": "accident",
+        "index": 11
+      },
+      {
+        "word": "acoustic",
+        "index": 16
+      },
+      {
+        "word": "announce",
+        "index": 74
+      },
+      {
+        "word": "artefact",
+        "index": 103
+      },
+      {
+        "word": "attitude",
+        "index": 117
+      },
+      {
+        "word": "bachelor",
+        "index": 137
+      },
+      {
+        "word": "broccoli",
+        "index": 227
+      },
+      {
+        "word": "business",
+        "index": 248
+      },
+      {
+        "word": "category",
+        "index": 289
+      },
+      {
+        "word": "champion",
+        "index": 304
+      },
+      {
+        "word": "cinnamon",
+        "index": 328
+      },
+      {
+        "word": "congress",
+        "index": 376
+      },
+      {
+        "word": "consider",
+        "index": 378
+      },
+      {
+        "word": "convince",
+        "index": 380
+      },
+      {
+        "word": "cupboard",
+        "index": 430
+      },
+      {
+        "word": "daughter",
+        "index": 446
+      },
+      {
+        "word": "december",
+        "index": 453
+      },
+      {
+        "word": "decorate",
+        "index": 456
+      },
+      {
+        "word": "decrease",
+        "index": 457
+      },
+      {
+        "word": "describe",
+        "index": 476
+      },
+      {
+        "word": "dinosaur",
+        "index": 499
+      },
+      {
+        "word": "disagree",
+        "index": 502
+      },
+      {
+        "word": "discover",
+        "index": 503
+      },
+      {
+        "word": "disorder",
+        "index": 507
+      },
+      {
+        "word": "distance",
+        "index": 509
+      },
+      {
+        "word": "document",
+        "index": 515
+      },
+      {
+        "word": "electric",
+        "index": 571
+      },
+      {
+        "word": "elephant",
+        "index": 574
+      },
+      {
+        "word": "elevator",
+        "index": 575
+      },
+      {
+        "word": "envelope",
+        "index": 606
+      },
+      {
+        "word": "evidence",
+        "index": 622
+      },
+      {
+        "word": "exchange",
+        "index": 629
+      },
+      {
+        "word": "exercise",
+        "index": 634
+      },
+      {
+        "word": "favorite",
+        "index": 672
+      },
+      {
+        "word": "february",
+        "index": 674
+      },
+      {
+        "word": "festival",
+        "index": 681
+      },
+      {
+        "word": "frequent",
+        "index": 741
+      },
+      {
+        "word": "hedgehog",
+        "index": 852
+      },
+      {
+        "word": "hospital",
+        "index": 879
+      },
+      {
+        "word": "identify",
+        "index": 900
+      },
+      {
+        "word": "increase",
+        "index": 917
+      },
+      {
+        "word": "indicate",
+        "index": 919
+      },
+      {
+        "word": "industry",
+        "index": 921
+      },
+      {
+        "word": "innocent",
+        "index": 932
+      },
+      {
+        "word": "interest",
+        "index": 941
+      },
+      {
+        "word": "kangaroo",
+        "index": 972
+      },
+      {
+        "word": "language",
+        "index": 999
+      },
+      {
+        "word": "marriage",
+        "index": 1090
+      },
+      {
+        "word": "material",
+        "index": 1095
+      },
+      {
+        "word": "mechanic",
+        "index": 1105
+      },
+      {
+        "word": "midnight",
+        "index": 1123
+      },
+      {
+        "word": "mosquito",
+        "index": 1152
+      },
+      {
+        "word": "mountain",
+        "index": 1156
+      },
+      {
+        "word": "multiply",
+        "index": 1163
+      },
+      {
+        "word": "mushroom",
+        "index": 1166
+      },
+      {
+        "word": "negative",
+        "index": 1183
+      },
+      {
+        "word": "ordinary",
+        "index": 1250
+      },
+      {
+        "word": "original",
+        "index": 1253
+      },
+      {
+        "word": "physical",
+        "index": 1311
+      },
+      {
+        "word": "position",
+        "index": 1347
+      },
+      {
+        "word": "possible",
+        "index": 1348
+      },
+      {
+        "word": "practice",
+        "index": 1355
+      },
+      {
+        "word": "priority",
+        "index": 1367
+      },
+      {
+        "word": "property",
+        "index": 1379
+      },
+      {
+        "word": "purchase",
+        "index": 1393
+      },
+      {
+        "word": "question",
+        "index": 1404
+      },
+      {
+        "word": "remember",
+        "index": 1453
+      },
+      {
+        "word": "resemble",
+        "index": 1466
+      },
+      {
+        "word": "resource",
+        "index": 1468
+      },
+      {
+        "word": "response",
+        "index": 1469
+      },
+      {
+        "word": "scissors",
+        "index": 1544
+      },
+      {
+        "word": "scorpion",
+        "index": 1545
+      },
+      {
+        "word": "security",
+        "index": 1558
+      },
+      {
+        "word": "sentence",
+        "index": 1567
+      },
+      {
+        "word": "shoulder",
+        "index": 1591
+      },
+      {
+        "word": "solution",
+        "index": 1654
+      },
+      {
+        "word": "squirrel",
+        "index": 1693
+      },
+      {
+        "word": "strategy",
+        "index": 1718
+      },
+      {
+        "word": "struggle",
+        "index": 1722
+      },
+      {
+        "word": "surprise",
+        "index": 1747
+      },
+      {
+        "word": "surround",
+        "index": 1748
+      },
+      {
+        "word": "together",
+        "index": 1821
+      },
+      {
+        "word": "tomorrow",
+        "index": 1825
+      },
+      {
+        "word": "tortoise",
+        "index": 1836
+      },
+      {
+        "word": "transfer",
+        "index": 1849
+      },
+      {
+        "word": "umbrella",
+        "index": 1889
+      },
+      {
+        "word": "universe",
+        "index": 1902
+      }
     ]
   },
   "length_distribution": {
     "3": 103,
     "4": 442,
     "5": 555,
-    "6": 508
+    "6": 508,
+    "7": 352,
+    "8": 88
   },
-  "length_patterns": [
-    {
-      "index": 0,
-      "lengths": [
-        3,
-        3,
-        3,
-        6
-      ],
-      "combinations": 555105316
-    },
-    {
-      "index": 1,
-      "lengths": [
-        3,
-        3,
-        4,
-        5
-      ],
-      "combinations": 2602493790
-    },
-    {
-      "index": 2,
-      "lengths": [
-        3,
-        3,
-        5,
-        4
-      ],
-      "combinations": 2602493790
-    },
-    {
-      "index": 3,
-      "lengths": [
-        3,
-        3,
-        6,
-        3
-      ],
-      "combinations": 555105316
-    },
-    {
-      "index": 4,
-      "lengths": [
-        3,
-        4,
-        3,
-        5
-      ],
-      "combinations": 2602493790
-    },
-    {
-      "index": 5,
-      "lengths": [
-        3,
-        4,
-        4,
-        4
-      ],
-      "combinations": 8894141464
-    },
-    {
-      "index": 6,
-      "lengths": [
-        3,
-        4,
-        5,
-        3
-      ],
-      "combinations": 2602493790
-    },
-    {
-      "index": 7,
-      "lengths": [
-        3,
-        5,
-        3,
-        4
-      ],
-      "combinations": 2602493790
-    },
-    {
-      "index": 8,
-      "lengths": [
-        3,
-        5,
-        4,
-        3
-      ],
-      "combinations": 2602493790
-    },
-    {
-      "index": 9,
-      "lengths": [
-        3,
-        6,
-        3,
-        3
-      ],
-      "combinations": 555105316
-    },
-    {
-      "index": 10,
-      "lengths": [
-        4,
-        3,
-        3,
-        5
-      ],
-      "combinations": 2602493790
-    },
-    {
-      "index": 11,
-      "lengths": [
-        4,
-        3,
-        4,
-        4
-      ],
-      "combinations": 8894141464
-    },
-    {
-      "index": 12,
-      "lengths": [
-        4,
-        3,
-        5,
-        3
-      ],
-      "combinations": 2602493790
-    },
-    {
-      "index": 13,
-      "lengths": [
-        4,
-        4,
-        3,
-        4
-      ],
-      "combinations": 8894141464
-    },
-    {
-      "index": 14,
-      "lengths": [
-        4,
-        4,
-        4,
-        3
-      ],
-      "combinations": 8894141464
-    },
-    {
-      "index": 15,
-      "lengths": [
-        4,
-        5,
-        3,
-        3
-      ],
-      "combinations": 2602493790
-    },
-    {
-      "index": 16,
-      "lengths": [
-        5,
-        3,
-        3,
-        4
-      ],
-      "combinations": 2602493790
-    },
-    {
-      "index": 17,
-      "lengths": [
-        5,
-        3,
-        4,
-        3
-      ],
-      "combinations": 2602493790
-    },
-    {
-      "index": 18,
-      "lengths": [
-        5,
-        4,
-        3,
-        3
-      ],
-      "combinations": 2602493790
-    },
-    {
-      "index": 19,
-      "lengths": [
-        6,
-        3,
-        3,
-        3
-      ],
-      "combinations": 555105316
-    }
-  ],
-  "total_exact_length_combinations": 69026912600,
-  "expected_checksum_valid": 4314182037.5,
+  "length_patterns": [],
+  "total_combinations": 17592186044416,
+  "total_exact_length_combinations": 17592186044416,
+  "expected_checksum_valid": 1099511627776.0,
   "validation_vectors": {
     "c_tail_mnemonic": "oblige dilemma hurry disorder happy spoil shiver key theory romance valid raw",
     "c_tail_expected_address": "z1qpzrf4jk0s3lt76kw4h8rp4sm4y6vf3jspcyda",
@@ -6695,6 +8262,21 @@
     ],
     "python_first_10000_first_valid_entropy_hex": "9827c5be9fb68fa4b18bd002604c0981",
     "python_first_valid_address": "z1qq6a32rut3yw9ar8tfa4nape698mzhdjyxkmpq",
-    "python_first_valid_core_hex": "0035d8a87c5c48e2f4675a7b59f439d14fb15db2"
+    "python_first_valid_core_hex": "0035d8a87c5c48e2f4675a7b59f439d14fb15db2",
+    "all_first_10000_checksum_valid": 625,
+    "all_first_10000_first_valid_global": 0,
+    "all_first_10000_first_valid_tail_indices": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "all_first_10000_first_valid_tail_words": [
+      "abandon",
+      "abandon",
+      "abandon",
+      "abandon"
+    ],
+    "all_first_10000_first_valid_entropy_hex": "9827c5be9fb68fa4b18bd00000000000"
   }
 }

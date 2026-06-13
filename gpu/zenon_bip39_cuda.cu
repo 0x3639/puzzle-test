@@ -22,9 +22,11 @@ struct KernelResult {
     unsigned long long hit_global;
     uint16_t hit_tail[4];
     uint8_t hit_core[20];
-    uint8_t hit_mnemonic[72];
+    uint8_t hit_mnemonic[zc::MAX_MNEMONIC_BYTES + 1];
+    int hit_mnemonic_len;
     uint8_t self_test_core[20];
-    uint8_t self_test_mnemonic[72];
+    uint8_t self_test_mnemonic[zc::MAX_MNEMONIC_BYTES + 1];
+    int self_test_mnemonic_len;
 };
 
 #define CUDA_CHECK(call)                                                        \
@@ -141,6 +143,17 @@ __device__ bool tail_for_global_offset(
     uint64_t global_offset,
     uint16_t tail[4]
 ) {
+    if (zw::kSearchModeAllWords) {
+        if (global_offset >= zw::kTotalCombinations) {
+            return false;
+        }
+        tail[0] = uint16_t((global_offset >> 33) & 0x7ffULL);
+        tail[1] = uint16_t((global_offset >> 22) & 0x7ffULL);
+        tail[2] = uint16_t((global_offset >> 11) & 0x7ffULL);
+        tail[3] = uint16_t(global_offset & 0x7ffULL);
+        return true;
+    }
+
     int pattern_index = -1;
     uint64_t pattern_start = 0;
     for (int i = 0; i < zw::kPatternCount; ++i) {
@@ -284,8 +297,9 @@ __global__ void address_kernel(
 
         atomicAdd(&result->address_derivations, 1ULL);
         uint8_t core[20];
-        uint8_t mnemonic[71];
-        zc::derive_zenon_core(tail, core, mnemonic);
+        uint8_t mnemonic[zc::MAX_MNEMONIC_BYTES + 1];
+        int mnemonic_len = 0;
+        zc::derive_zenon_core(tail, core, mnemonic, &mnemonic_len);
         if (!zc::core_matches_target(core)) {
             continue;
         }
@@ -300,30 +314,27 @@ __global__ void address_kernel(
             for (int i = 0; i < 20; ++i) {
                 result->hit_core[i] = core[i];
             }
-            #pragma unroll
-            for (int i = 0; i < 71; ++i) {
+            for (int i = 0; i < mnemonic_len; ++i) {
                 result->hit_mnemonic[i] = mnemonic[i];
             }
-            result->hit_mnemonic[71] = 0;
+            result->hit_mnemonic[mnemonic_len] = 0;
+            result->hit_mnemonic_len = mnemonic_len;
         }
         return;
     }
 }
 
 __global__ void address_self_test_kernel(KernelResult* result) {
-    uint16_t tail[4];
-    if (!tail_for_global_offset(9, tail)) {
-        result->self_test_pass = 0;
-        return;
-    }
+    uint16_t tail[4] = {19, 19, 19, 28};
     if (!bip39_checksum_valid(tail)) {
         result->self_test_pass = 0;
         return;
     }
 
     uint8_t core[20];
-    uint8_t mnemonic[71];
-    zc::derive_zenon_core(tail, core, mnemonic);
+    uint8_t mnemonic[zc::MAX_MNEMONIC_BYTES + 1];
+    int mnemonic_len = 0;
+    zc::derive_zenon_core(tail, core, mnemonic, &mnemonic_len);
     result->checksum_valid = 1;
     result->address_derivations = 1;
     result->first_valid_global = 9;
@@ -335,11 +346,11 @@ __global__ void address_self_test_kernel(KernelResult* result) {
     for (int i = 0; i < 20; ++i) {
         result->self_test_core[i] = core[i];
     }
-    #pragma unroll
-    for (int i = 0; i < 71; ++i) {
+    for (int i = 0; i < mnemonic_len; ++i) {
         result->self_test_mnemonic[i] = mnemonic[i];
     }
-    result->self_test_mnemonic[71] = 0;
+    result->self_test_mnemonic[mnemonic_len] = 0;
+    result->self_test_mnemonic_len = mnemonic_len;
     result->self_test_pass = zc::core_matches_first_valid_vector(core) ? 1u : 0u;
 }
 
@@ -473,8 +484,10 @@ int main(int argc, char** argv) {
     std::memset(host_result.hit_tail, 0, sizeof(host_result.hit_tail));
     std::memset(host_result.hit_core, 0, sizeof(host_result.hit_core));
     std::memset(host_result.hit_mnemonic, 0, sizeof(host_result.hit_mnemonic));
+    host_result.hit_mnemonic_len = 0;
     std::memset(host_result.self_test_core, 0, sizeof(host_result.self_test_core));
     std::memset(host_result.self_test_mnemonic, 0, sizeof(host_result.self_test_mnemonic));
+    host_result.self_test_mnemonic_len = 0;
 
     KernelResult* device_result = nullptr;
     CUDA_CHECK(cudaMalloc(&device_result, sizeof(KernelResult)));
@@ -507,6 +520,7 @@ int main(int argc, char** argv) {
 
     const double seconds = double(milliseconds) / 1000.0;
     const double combos_per_second = seconds > 0.0 ? double(options.count) / seconds : 0.0;
+    const double derivations_per_second = seconds > 0.0 ? double(host_result.address_derivations) / seconds : 0.0;
 
     std::printf("{\n");
     std::printf("  \"device\": \"%s\",\n", prop.name);
@@ -525,6 +539,7 @@ int main(int argc, char** argv) {
     std::printf("  \"combos_per_second\": %.2f,\n", combos_per_second);
     std::printf("  \"checksum_valid\": %llu,\n", host_result.checksum_valid);
     std::printf("  \"address_derivations\": %llu,\n", host_result.address_derivations);
+    std::printf("  \"address_derivations_per_second\": %.2f,\n", derivations_per_second);
     if (host_result.first_valid_global != 0xffffffffffffffffULL) {
         std::printf("  \"first_valid_global\": %llu,\n", host_result.first_valid_global);
         std::printf("  \"first_valid_tail_indices\": [%u, %u, %u, %u]\n",

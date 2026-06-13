@@ -190,10 +190,12 @@ __device__ void hmac_sha512(const uint8_t* key, int key_len, const uint8_t* msg,
     hmac_sha512_precomputed(ipad, opad, msg, msg_len, out);
 }
 
-__device__ void pbkdf2_hmac_sha512_mnemonic(const uint8_t mnemonic[71], uint8_t seed[64]) {
+static constexpr int MAX_MNEMONIC_BYTES = 96;
+
+__device__ void pbkdf2_hmac_sha512_mnemonic(const uint8_t* mnemonic, int mnemonic_len, uint8_t seed[64]) {
     uint8_t ipad[128];
     uint8_t opad[128];
-    hmac_sha512_pads(mnemonic, 71, ipad, opad);
+    hmac_sha512_pads(mnemonic, mnemonic_len, ipad, opad);
 
     uint8_t msg[12] = {'m', 'n', 'e', 'm', 'o', 'n', 'i', 'c', 0, 0, 0, 1};
     uint8_t u[64];
@@ -703,7 +705,7 @@ __device__ int append_word(uint16_t index, uint8_t* out, int pos) {
     return pos;
 }
 
-__device__ void build_mnemonic(const uint16_t tail[4], uint8_t mnemonic[71]) {
+__device__ int build_mnemonic(const uint16_t tail[4], uint8_t mnemonic[MAX_MNEMONIC_BYTES]) {
     int pos = 0;
     #pragma unroll
     for (int i = 0; i < zw::kKnownPrefixByteCount; ++i) {
@@ -716,20 +718,29 @@ __device__ void build_mnemonic(const uint16_t tail[4], uint8_t mnemonic[71]) {
     pos = append_word(tail[2], mnemonic, pos);
     mnemonic[pos++] = ' ';
     pos = append_word(tail[3], mnemonic, pos);
+    return pos;
 }
 
-__device__ void derive_zenon_core(const uint16_t tail[4], uint8_t core[20], uint8_t mnemonic_out[71]) {
-    uint8_t mnemonic[71];
-    build_mnemonic(tail, mnemonic);
+__device__ void derive_zenon_core(
+    const uint16_t tail[4],
+    uint8_t core[20],
+    uint8_t mnemonic_out[MAX_MNEMONIC_BYTES],
+    int* mnemonic_len_out
+) {
+    uint8_t mnemonic[MAX_MNEMONIC_BYTES];
+    const int mnemonic_len = build_mnemonic(tail, mnemonic);
     if (mnemonic_out) {
-        #pragma unroll
-        for (int i = 0; i < 71; ++i) {
+        for (int i = 0; i < mnemonic_len; ++i) {
             mnemonic_out[i] = mnemonic[i];
         }
+        mnemonic_out[mnemonic_len] = 0;
+    }
+    if (mnemonic_len_out) {
+        *mnemonic_len_out = mnemonic_len;
     }
 
     uint8_t seed[64];
-    pbkdf2_hmac_sha512_mnemonic(mnemonic, seed);
+    pbkdf2_hmac_sha512_mnemonic(mnemonic, mnemonic_len, seed);
 
     uint8_t key[32];
     uint8_t chain_code[32];

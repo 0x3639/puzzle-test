@@ -9,6 +9,7 @@ DEFAULT_RANGE_START=0
 DEFAULT_RANGE_COUNT=10000
 DEFAULT_FULL_CHUNK=100000000
 DEFAULT_ADDRESS_CHUNK=1000000
+DEFAULT_WORD_MODE=all
 
 log() {
   printf '\n==> %s\n' "$*"
@@ -178,9 +179,14 @@ ensure_python_env() {
 }
 
 generate_workload() {
-  log "Generating GPU workload JSON and CUDA header"
-  "$PYTHON_BIN" scripts/prepare_gpu_workload.py
+  local word_mode="${WORD_MODE:-$DEFAULT_WORD_MODE}"
+  log "Generating GPU workload JSON and CUDA header with word mode ${word_mode}"
+  "$PYTHON_BIN" scripts/prepare_gpu_workload.py --word-mode "$word_mode"
   "$PYTHON_BIN" scripts/emit_cuda_workload_header.py
+}
+
+workload_mode() {
+  "$PYTHON_BIN" -c 'import json; print(json.load(open("out/gpu_workload.json")).get("search_mode", "exact18"))'
 }
 
 configure_build() {
@@ -212,9 +218,17 @@ run_smoke() {
   output="$(./gpu/build/zenon_bip39_cuda --start 0 --count 10000)"
   printf '%s\n' "$output"
 
-  printf '%s\n' "$output" | grep -q '"checksum_valid": 643' || die "Smoke test failed: expected checksum_valid 643"
-  printf '%s\n' "$output" | grep -q '"first_valid_global": 9' || die "Smoke test failed: expected first_valid_global 9"
-  printf '%s\n' "$output" | grep -q '"first_valid_tail_indices": \[19, 19, 19, 28\]' || die "Smoke test failed: expected tail indices [19, 19, 19, 28]"
+  local mode
+  mode="$(workload_mode)"
+  if [ "$mode" = "all" ]; then
+    printf '%s\n' "$output" | grep -q '"checksum_valid": 625' || die "Smoke test failed: expected checksum_valid 625 for full-wordlist mode"
+    printf '%s\n' "$output" | grep -q '"first_valid_global": 0' || die "Smoke test failed: expected first_valid_global 0 for full-wordlist mode"
+    printf '%s\n' "$output" | grep -q '"first_valid_tail_indices": \[0, 0, 0, 0\]' || die "Smoke test failed: expected tail indices [0, 0, 0, 0]"
+  else
+    printf '%s\n' "$output" | grep -q '"checksum_valid": 643' || die "Smoke test failed: expected checksum_valid 643 for exact18 mode"
+    printf '%s\n' "$output" | grep -q '"first_valid_global": 9' || die "Smoke test failed: expected first_valid_global 9 for exact18 mode"
+    printf '%s\n' "$output" | grep -q '"first_valid_tail_indices": \[19, 19, 19, 28\]' || die "Smoke test failed: expected tail indices [19, 19, 19, 28]"
+  fi
 
   log "Smoke test passed"
 }
@@ -258,7 +272,7 @@ run_address_range() {
 }
 
 total_combinations() {
-  "$PYTHON_BIN" -c 'import json; print(json.load(open("out/gpu_workload.json"))["total_exact_length_combinations"])'
+  "$PYTHON_BIN" -c 'import json; w=json.load(open("out/gpu_workload.json")); print(w.get("total_combinations", w["total_exact_length_combinations"]))'
 }
 
 json_compact() {
@@ -439,6 +453,8 @@ Environment overrides:
   CUDA_ARCH=89 bash runpod/run.sh smoke            # RTX 4090 / L40S
   CUDA_ARCH=80 bash runpod/run.sh smoke            # A100
   SKIP_VENV=1 bash runpod/run.sh smoke             # use system Python
+  WORD_MODE=exact18 bash runpod/run.sh smoke       # old 18-byte constrained mode
+  WORD_MODE=all bash runpod/run.sh smoke           # full 2048^4 wordlist mode
   FULL_CHUNK=500000000 bash runpod/run.sh full      # chunk size
   FULL_START=1000000000 bash runpod/run.sh full     # resume offset
   FULL_STOP=2000000000 bash runpod/run.sh full      # stop offset
@@ -446,7 +462,7 @@ Environment overrides:
   ADDRESS_START=1000000000 bash runpod/run.sh full-address
 
 CUDA modes:
-  checksum/full      exact-length candidate enumeration + BIP39 checksum validation
+  checksum/full      candidate enumeration + BIP39 checksum validation
   address/full-address
                      checksum-valid candidates + Zenon target-address comparison
 EOF

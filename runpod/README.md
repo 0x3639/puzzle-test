@@ -1,13 +1,20 @@
 # RunPod Quick Start
 
-Use this if you just want to run the CUDA checksum runner with as little ceremony as possible.
+Use this if you just want to run the CUDA runner with as little ceremony as possible.
+
+This branch defaults to full-wordlist mode:
+
+```text
+2048^4 = 17,592,186,044,416 candidate tails
+expected checksum-valid address derivations = 1,099,511,627,776
+```
 
 ## One-Command Smoke Test
 
 On a RunPod CUDA devel pod:
 
 ```sh
-git clone --branch codex/zenon-cuda-kernel https://github.com/0x3639/puzzle-test.git
+git clone --branch codex/full-wordlist-gpu-search https://github.com/0x3639/puzzle-test.git
 cd puzzle-test
 bash runpod/run.sh smoke
 ```
@@ -30,9 +37,9 @@ verify expected output
 Expected smoke-test fields:
 
 ```text
-"checksum_valid": 643
-"first_valid_global": 9
-"first_valid_tail_indices": [19, 19, 19, 28]
+"checksum_valid": 625
+"first_valid_global": 0
+"first_valid_tail_indices": [0, 0, 0, 0]
 ```
 
 ## Pick The Right RunPod Image
@@ -148,9 +155,40 @@ Resume from an offset:
 ADDRESS_OUTPUT=out/address.jsonl ADDRESS_START=1000000000 bash runpod/run.sh full-address
 ```
 
+## Full-Wordlist ETA
+
+The full address search has:
+
+```text
+17,592,186,044,416 candidate tails
+1,099,511,627,776 expected checksum-valid address derivations
+```
+
+Run this first to measure your actual Blackwell rate:
+
+```sh
+bash runpod/run.sh address 0 1000000
+```
+
+Then use:
+
+```text
+ETA seconds = 1,099,511,627,776 / address_derivations_per_second
+```
+
+Reference table:
+
+```text
+1,000 derivations/sec      about 34.9 years
+10,000 derivations/sec     about 3.5 years
+100,000 derivations/sec    about 127 days
+1,000,000 derivations/sec  about 12.7 days
+10,000,000 derivations/sec about 30.5 hours
+```
+
 ## Full Checksum Batch
 
-Run the entire exact-length candidate space through the current GPU checksum stage:
+Run the entire full-wordlist candidate space through the current GPU checksum stage:
 
 ```sh
 bash runpod/run.sh full
@@ -159,7 +197,7 @@ bash runpod/run.sh full
 This scans:
 
 ```text
-69,026,912,600 candidates
+17,592,186,044,416 candidates
 ```
 
 By default it runs in `100,000,000`-candidate chunks and appends one compact JSON record per chunk to:
@@ -218,7 +256,7 @@ You want:
 
 ```text
 "full_space_covered": true
-"candidate_count_sum": 69026912600
+"candidate_count_sum": 17592186044416
 "gap_count": 0
 "overlap_count": 0
 ```
@@ -226,7 +264,7 @@ You want:
 The `checksum_valid` value should be close to:
 
 ```text
-4314182037.5
+1099511627776.0
 ```
 
 That value is an expectation, not an exact required count.
