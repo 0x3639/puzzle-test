@@ -92,6 +92,58 @@ start = 500,000,000
 count = 100,000,000
 ```
 
+## Full Checksum Batch
+
+Run the entire exact-length candidate space through the current GPU checksum stage:
+
+```sh
+bash runpod/run.sh full
+```
+
+This scans:
+
+```text
+69,026,912,600 candidates
+```
+
+By default it runs in `100,000,000`-candidate chunks and appends one compact JSON record per chunk to:
+
+```text
+out/runpod_full_<timestamp>.jsonl
+```
+
+Use a larger chunk if your GPU is stable and you want less loop overhead:
+
+```sh
+bash runpod/run.sh full 500000000
+```
+
+Write to a predictable output file:
+
+```sh
+FULL_OUTPUT=out/full_checksum.jsonl bash runpod/run.sh full
+```
+
+Resume from a known offset:
+
+```sh
+FULL_OUTPUT=out/full_checksum.jsonl FULL_START=1000000000 bash runpod/run.sh full
+```
+
+Run only a bounded window:
+
+```sh
+bash runpod/run.sh full 100000000 1000000000 2000000000
+```
+
+Arguments are:
+
+```text
+full [chunk_size] [start] [stop]
+```
+
+Important: this is still the checksum-only GPU stage. It does not yet perform the final Zenon address derivation.
+
 ## GPU Architecture Overrides
 
 The script tries to detect compute capability with `nvidia-smi`.

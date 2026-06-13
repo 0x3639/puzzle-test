@@ -146,6 +146,14 @@ The total candidate space is:
 69026912600
 ```
 
+From the repo root, the easier full-space wrapper is:
+
+```sh
+bash runpod/run.sh full
+```
+
+It runs the full space in chunks and writes JSONL progress under `out/`.
+
 ## Full Oracle Work Remaining
 
 The remaining CUDA work is in this order:

@@ -256,6 +256,20 @@ Run a custom range:
 bash runpod/run.sh range 500000000 100000000
 ```
 
+Run the full checksum batch in chunks:
+
+```sh
+bash runpod/run.sh full
+```
+
+This scans all `69,026,912,600` exact-length candidates through the current checksum-only GPU stage and writes chunk results to `out/runpod_full_<timestamp>.jsonl`.
+
+Resume from an offset:
+
+```sh
+FULL_OUTPUT=out/full_checksum.jsonl FULL_START=1000000000 bash runpod/run.sh full
+```
+
 For H100, if auto-detection fails:
 
 ```sh

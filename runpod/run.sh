@@ -7,6 +7,7 @@ cd "$ROOT"
 DEFAULT_BENCH_COUNT=100000000
 DEFAULT_RANGE_START=0
 DEFAULT_RANGE_COUNT=10000
+DEFAULT_FULL_CHUNK=100000000
 
 log() {
   printf '\n==> %s\n' "$*"
@@ -235,6 +236,71 @@ run_range() {
   ./gpu/build/zenon_bip39_cuda --start "$start" --count "$count"
 }
 
+total_combinations() {
+  "$PYTHON_BIN" -c 'import json; print(json.load(open("out/gpu_workload.json"))["total_exact_length_combinations"])'
+}
+
+json_compact() {
+  "$PYTHON_BIN" -c 'import json,sys; print(json.dumps(json.load(sys.stdin), separators=(",", ":")))'
+}
+
+progress_percent() {
+  "$PYTHON_BIN" -c 'import sys; done=int(sys.argv[1]); total=int(sys.argv[2]); print(f"{done / total:.2%}")' "$1" "$2"
+}
+
+run_full() {
+  local chunk="${1:-${FULL_CHUNK:-$DEFAULT_FULL_CHUNK}}"
+  local start="${2:-${FULL_START:-0}}"
+  local stop="${3:-${FULL_STOP:-}}"
+  local output_file="${FULL_OUTPUT:-}"
+
+  ensure_ready
+
+  local total
+  total="$(total_combinations)"
+  if [ -z "$stop" ]; then
+    stop="$total"
+  fi
+  if [ -z "$output_file" ]; then
+    output_file="out/runpod_full_$(date -u +%Y%m%dT%H%M%SZ).jsonl"
+  fi
+
+  if [ "$chunk" -le 0 ]; then
+    die "full chunk size must be positive"
+  fi
+  if [ "$start" -lt 0 ] || [ "$stop" -lt 0 ] || [ "$start" -ge "$stop" ] || [ "$stop" -gt "$total" ]; then
+    die "invalid full range: start=${start}, stop=${stop}, total=${total}"
+  fi
+
+  mkdir -p "$(dirname "$output_file")"
+
+  log "Running full checksum batch"
+  printf 'total=%s\nstart=%s\nstop=%s\nchunk=%s\noutput=%s\n' "$total" "$start" "$stop" "$chunk" "$output_file"
+
+  local current="$start"
+  while [ "$current" -lt "$stop" ]; do
+    local remaining=$((stop - current))
+    local count="$chunk"
+    if [ "$remaining" -lt "$count" ]; then
+      count="$remaining"
+    fi
+
+    log "Chunk start=${current}, count=${count}"
+    local output
+    output="$(./gpu/build/zenon_bip39_cuda --start "$current" --count "$count")"
+    printf '%s\n' "$output"
+    printf '%s\n' "$output" | json_compact >> "$output_file"
+
+    current=$((current + count))
+    local done=$((current - start))
+    local span=$((stop - start))
+    log "Progress $(progress_percent "$done" "$span") (${current}/${stop})"
+  done
+
+  log "Full checksum batch complete"
+  printf 'Wrote %s\n' "$output_file"
+}
+
 run_setup() {
   ensure_ready
   log "Setup/build complete"
@@ -247,6 +313,7 @@ Usage:
   bash runpod/run.sh setup
   bash runpod/run.sh benchmark [count] [start]
   bash runpod/run.sh range [start] [count]
+  bash runpod/run.sh full [chunk_size] [start] [stop]
   bash runpod/run.sh help
 
 Recommended first RunPod command:
@@ -256,6 +323,9 @@ Examples:
   bash runpod/run.sh benchmark
   bash runpod/run.sh benchmark 100000000
   bash runpod/run.sh range 500000000 100000000
+  bash runpod/run.sh full
+  bash runpod/run.sh full 500000000
+  FULL_OUTPUT=out/full.jsonl bash runpod/run.sh full 100000000
 
 Environment overrides:
   CUDA_ARCH=90 bash runpod/run.sh smoke            # H100 with matching toolkit
@@ -263,6 +333,9 @@ Environment overrides:
   CUDA_ARCH=89 bash runpod/run.sh smoke            # RTX 4090 / L40S
   CUDA_ARCH=80 bash runpod/run.sh smoke            # A100
   SKIP_VENV=1 bash runpod/run.sh smoke             # use system Python
+  FULL_CHUNK=500000000 bash runpod/run.sh full      # chunk size
+  FULL_START=1000000000 bash runpod/run.sh full     # resume offset
+  FULL_STOP=2000000000 bash runpod/run.sh full      # stop offset
 
 Current CUDA stage:
   exact-length candidate enumeration + BIP39 checksum validation only.
@@ -286,6 +359,9 @@ main() {
       ;;
     range|run)
       run_range "$@"
+      ;;
+    full|all)
+      run_full "$@"
       ;;
     help|-h|--help)
       print_usage
