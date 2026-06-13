@@ -7,8 +7,6 @@
 namespace zenon_crypto {
 namespace zw = zenon_gpu_workload;
 
-using u128 = unsigned __int128;
-
 __device__ __forceinline__ uint64_t rotr64(uint64_t value, int bits) {
     return (value >> bits) | (value << (64 - bits));
 }
@@ -253,6 +251,104 @@ struct Fe {
 
 static constexpr uint64_t FE_MASK = (1ULL << 51) - 1ULL;
 
+struct U128 {
+    uint64_t lo;
+    uint64_t hi;
+};
+
+__device__ __forceinline__ U128 u128_zero() {
+    return U128{0, 0};
+}
+
+__device__ __forceinline__ U128 u128_from_u64(uint64_t value) {
+    return U128{value, 0};
+}
+
+__device__ __forceinline__ void u128_add(U128& a, const U128& b) {
+    const uint64_t old = a.lo;
+    a.lo += b.lo;
+    a.hi += b.hi + (a.lo < old ? 1ULL : 0ULL);
+}
+
+__device__ __forceinline__ void u128_add_u64(U128& a, uint64_t value) {
+    const uint64_t old = a.lo;
+    a.lo += value;
+    a.hi += (a.lo < old ? 1ULL : 0ULL);
+}
+
+__device__ U128 u128_mul51(uint64_t a, uint64_t b) {
+    const uint64_t mask32 = 0xffffffffULL;
+    const uint64_t al[2] = {a & mask32, a >> 32};
+    const uint64_t bl[2] = {b & mask32, b >> 32};
+    uint64_t limb[4] = {0, 0, 0, 0};
+
+    #pragma unroll
+    for (int i = 0; i < 2; ++i) {
+        uint64_t carry = 0;
+        #pragma unroll
+        for (int j = 0; j < 2; ++j) {
+            const int k = i + j;
+            const uint64_t product = al[i] * bl[j];
+            const uint64_t low = product & mask32;
+            const uint64_t high = product >> 32;
+
+            uint64_t sum = limb[k] + low + carry;
+            limb[k] = sum & mask32;
+            carry = (sum >> 32) + high;
+        }
+        int k = i + 2;
+        while (carry && k < 4) {
+            uint64_t sum = limb[k] + (carry & mask32);
+            limb[k] = sum & mask32;
+            carry = (carry >> 32) + (sum >> 32);
+            ++k;
+        }
+    }
+
+    return U128{
+        limb[0] | (limb[1] << 32),
+        limb[2] | (limb[3] << 32),
+    };
+}
+
+__device__ U128 u128_mul_small(const U128& value, uint64_t factor) {
+    const uint64_t mask32 = 0xffffffffULL;
+    const uint64_t limb[4] = {
+        value.lo & mask32,
+        value.lo >> 32,
+        value.hi & mask32,
+        value.hi >> 32,
+    };
+    uint64_t out[4] = {0, 0, 0, 0};
+    uint64_t carry = 0;
+    #pragma unroll
+    for (int i = 0; i < 4; ++i) {
+        const uint64_t product = limb[i] * factor + carry;
+        out[i] = product & mask32;
+        carry = product >> 32;
+    }
+    return U128{
+        out[0] | (out[1] << 32),
+        out[2] | (out[3] << 32),
+    };
+}
+
+__device__ __forceinline__ void u128_add_mul(U128& acc, uint64_t a, uint64_t b) {
+    u128_add(acc, u128_mul51(a, b));
+}
+
+__device__ __forceinline__ void u128_add_mul19(U128& acc, uint64_t a, uint64_t b) {
+    u128_add(acc, u128_mul_small(u128_mul51(a, b), 19ULL));
+}
+
+__device__ __forceinline__ uint64_t u128_low51(const U128& value) {
+    return value.lo & FE_MASK;
+}
+
+__device__ __forceinline__ uint64_t u128_shr51(const U128& value) {
+    return (value.lo >> 51) | (value.hi << 13);
+}
+
 __device__ __forceinline__ void fe_copy(Fe& out, const Fe& in) {
     #pragma unroll
     for (int i = 0; i < 5; ++i) {
@@ -312,22 +408,52 @@ __device__ Fe fe_neg(const Fe& a) {
 }
 
 __device__ Fe fe_mul(const Fe& a, const Fe& b) {
-    const u128 a0 = a.v[0], a1 = a.v[1], a2 = a.v[2], a3 = a.v[3], a4 = a.v[4];
-    const u128 b0 = b.v[0], b1 = b.v[1], b2 = b.v[2], b3 = b.v[3], b4 = b.v[4];
+    U128 c0 = u128_zero();
+    U128 c1 = u128_zero();
+    U128 c2 = u128_zero();
+    U128 c3 = u128_zero();
+    U128 c4 = u128_zero();
 
-    u128 c0 = a0*b0 + 19ULL*(a1*b4 + a2*b3 + a3*b2 + a4*b1);
-    u128 c1 = a0*b1 + a1*b0 + 19ULL*(a2*b4 + a3*b3 + a4*b2);
-    u128 c2 = a0*b2 + a1*b1 + a2*b0 + 19ULL*(a3*b4 + a4*b3);
-    u128 c3 = a0*b3 + a1*b2 + a2*b1 + a3*b0 + 19ULL*(a4*b4);
-    u128 c4 = a0*b4 + a1*b3 + a2*b2 + a3*b1 + a4*b0;
+    u128_add_mul(c0, a.v[0], b.v[0]);
+    u128_add_mul19(c0, a.v[1], b.v[4]);
+    u128_add_mul19(c0, a.v[2], b.v[3]);
+    u128_add_mul19(c0, a.v[3], b.v[2]);
+    u128_add_mul19(c0, a.v[4], b.v[1]);
+
+    u128_add_mul(c1, a.v[0], b.v[1]);
+    u128_add_mul(c1, a.v[1], b.v[0]);
+    u128_add_mul19(c1, a.v[2], b.v[4]);
+    u128_add_mul19(c1, a.v[3], b.v[3]);
+    u128_add_mul19(c1, a.v[4], b.v[2]);
+
+    u128_add_mul(c2, a.v[0], b.v[2]);
+    u128_add_mul(c2, a.v[1], b.v[1]);
+    u128_add_mul(c2, a.v[2], b.v[0]);
+    u128_add_mul19(c2, a.v[3], b.v[4]);
+    u128_add_mul19(c2, a.v[4], b.v[3]);
+
+    u128_add_mul(c3, a.v[0], b.v[3]);
+    u128_add_mul(c3, a.v[1], b.v[2]);
+    u128_add_mul(c3, a.v[2], b.v[1]);
+    u128_add_mul(c3, a.v[3], b.v[0]);
+    u128_add_mul19(c3, a.v[4], b.v[4]);
+
+    u128_add_mul(c4, a.v[0], b.v[4]);
+    u128_add_mul(c4, a.v[1], b.v[3]);
+    u128_add_mul(c4, a.v[2], b.v[2]);
+    u128_add_mul(c4, a.v[3], b.v[1]);
+    u128_add_mul(c4, a.v[4], b.v[0]);
 
     Fe out;
-    out.v[0] = uint64_t(c0) & FE_MASK; c1 += c0 >> 51;
-    out.v[1] = uint64_t(c1) & FE_MASK; c2 += c1 >> 51;
-    out.v[2] = uint64_t(c2) & FE_MASK; c3 += c2 >> 51;
-    out.v[3] = uint64_t(c3) & FE_MASK; c4 += c3 >> 51;
-    out.v[4] = uint64_t(c4) & FE_MASK; c0 = (c4 >> 51) * 19ULL + out.v[0];
-    out.v[0] = uint64_t(c0) & FE_MASK; out.v[1] += uint64_t(c0 >> 51);
+    out.v[0] = u128_low51(c0); u128_add_u64(c1, u128_shr51(c0));
+    out.v[1] = u128_low51(c1); u128_add_u64(c2, u128_shr51(c1));
+    out.v[2] = u128_low51(c2); u128_add_u64(c3, u128_shr51(c2));
+    out.v[3] = u128_low51(c3); u128_add_u64(c4, u128_shr51(c3));
+    out.v[4] = u128_low51(c4);
+    U128 folded = u128_from_u64(out.v[0]);
+    u128_add_u64(folded, u128_shr51(c4) * 19ULL);
+    out.v[0] = u128_low51(folded);
+    out.v[1] += u128_shr51(folded);
     fe_reduce(out);
     return out;
 }

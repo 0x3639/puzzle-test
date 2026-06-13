@@ -21,5 +21,4 @@ target_include_directories(zenon_bip39_cuda PRIVATE
 
 target_compile_options(zenon_bip39_cuda PRIVATE
   $<$<COMPILE_LANGUAGE:CUDA>:--expt-relaxed-constexpr>
-  $<$<COMPILE_LANGUAGE:CUDA>:--device-int128>
 )
