@@ -38,13 +38,14 @@ What works now:
 - CPU scripts can reproduce the puzzle analysis and run bounded brute-force searches.
 - The target Zenon address derivation is implemented in Python.
 - The CUDA program can enumerate exact-length candidates and run the BIP39 checksum gate on GPU.
+- The CUDA program has a validation-gated Zenon address oracle mode.
 - The CUDA smoke test is pinned to Python validation vectors.
 
 What is not done yet:
 
-- The CUDA program does not yet perform the full address oracle.
-- Missing GPU stages are `PBKDF2-HMAC-SHA512`, `SLIP-10 Ed25519`, `Ed25519 public key`, `SHA3-256`, and target-core comparison.
-- A GPU checksum hit is only a valid BIP39 mnemonic candidate, not a target-address hit.
+- The address oracle is new and should be validated on RunPod with `bash runpod/run.sh oracle-test`.
+- The full target-address run has not been completed in this repo's saved outputs.
+- A GPU checksum hit is only a valid BIP39 mnemonic candidate; an address hit requires `address` or `full-address` mode.
 
 ## Repo Layout
 
@@ -64,6 +65,7 @@ scripts/
 
 gpu/
   zenon_bip39_cuda.cu                  CUDA checksum kernel scaffold
+  crypto_oracle.cuh                    CUDA address-oracle crypto primitives
   CMakeLists.txt                       CUDA build file
   README.md                            GPU-specific setup and run instructions
   generated/gpu_workload.h             generated CUDA constant tables
@@ -255,6 +257,26 @@ Run a custom range:
 ```sh
 bash runpod/run.sh range 500000000 100000000
 ```
+
+Run the address-oracle validation vector:
+
+```sh
+bash runpod/run.sh oracle-test
+```
+
+Run a small real target-address search range:
+
+```sh
+bash runpod/run.sh address 0 100000
+```
+
+Run the full address search in chunks:
+
+```sh
+bash runpod/run.sh full-address
+```
+
+A target hit will print `"hit_found": true` and a `hit_mnemonic`.
 
 Run the full checksum batch in chunks:
 

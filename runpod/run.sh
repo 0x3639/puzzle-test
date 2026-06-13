@@ -8,6 +8,7 @@ DEFAULT_BENCH_COUNT=100000000
 DEFAULT_RANGE_START=0
 DEFAULT_RANGE_COUNT=10000
 DEFAULT_FULL_CHUNK=100000000
+DEFAULT_ADDRESS_CHUNK=1000000
 
 log() {
   printf '\n==> %s\n' "$*"
@@ -236,6 +237,26 @@ run_range() {
   ./gpu/build/zenon_bip39_cuda --start "$start" --count "$count"
 }
 
+run_oracle_test() {
+  ensure_ready
+
+  log "Running Zenon address oracle self-test"
+  local output
+  output="$(./gpu/build/zenon_bip39_cuda --mode self-test)"
+  printf '%s\n' "$output"
+  printf '%s\n' "$output" | grep -q '"self_test_pass": true' || die "Address oracle self-test failed"
+  log "Address oracle self-test passed"
+}
+
+run_address_range() {
+  local start="${1:-$DEFAULT_RANGE_START}"
+  local count="${2:-$DEFAULT_RANGE_COUNT}"
+  ensure_ready
+
+  log "Running Zenon address oracle range: start=${start}, count=${count}"
+  ./gpu/build/zenon_bip39_cuda --mode address --start "$start" --count "$count"
+}
+
 total_combinations() {
   "$PYTHON_BIN" -c 'import json; print(json.load(open("out/gpu_workload.json"))["total_exact_length_combinations"])'
 }
@@ -301,6 +322,71 @@ run_full() {
   printf 'Wrote %s\n' "$output_file"
 }
 
+run_full_address() {
+  local chunk="${1:-${ADDRESS_CHUNK:-$DEFAULT_ADDRESS_CHUNK}}"
+  local start="${2:-${ADDRESS_START:-0}}"
+  local stop="${3:-${ADDRESS_STOP:-}}"
+  local output_file="${ADDRESS_OUTPUT:-}"
+
+  ensure_ready
+
+  log "Running address oracle self-test before full address batch"
+  local self_test
+  self_test="$(./gpu/build/zenon_bip39_cuda --mode self-test)"
+  printf '%s\n' "$self_test"
+  printf '%s\n' "$self_test" | grep -q '"self_test_pass": true' || die "Address oracle self-test failed"
+
+  local total
+  total="$(total_combinations)"
+  if [ -z "$stop" ]; then
+    stop="$total"
+  fi
+  if [ -z "$output_file" ]; then
+    output_file="out/runpod_address_$(date -u +%Y%m%dT%H%M%SZ).jsonl"
+  fi
+
+  if [ "$chunk" -le 0 ]; then
+    die "address chunk size must be positive"
+  fi
+  if [ "$start" -lt 0 ] || [ "$stop" -lt 0 ] || [ "$start" -ge "$stop" ] || [ "$stop" -gt "$total" ]; then
+    die "invalid address range: start=${start}, stop=${stop}, total=${total}"
+  fi
+
+  mkdir -p "$(dirname "$output_file")"
+
+  log "Running full Zenon address batch"
+  printf 'total=%s\nstart=%s\nstop=%s\nchunk=%s\noutput=%s\n' "$total" "$start" "$stop" "$chunk" "$output_file"
+
+  local current="$start"
+  while [ "$current" -lt "$stop" ]; do
+    local remaining=$((stop - current))
+    local count="$chunk"
+    if [ "$remaining" -lt "$count" ]; then
+      count="$remaining"
+    fi
+
+    log "Address chunk start=${current}, count=${count}"
+    local output
+    output="$(./gpu/build/zenon_bip39_cuda --mode address --start "$current" --count "$count")"
+    printf '%s\n' "$output"
+    printf '%s\n' "$output" | json_compact >> "$output_file"
+
+    if printf '%s\n' "$output" | grep -q '"hit_found": true'; then
+      log "Target hit found"
+      printf 'Wrote %s\n' "$output_file"
+      return
+    fi
+
+    current=$((current + count))
+    local done=$((current - start))
+    local span=$((stop - start))
+    log "Progress $(progress_percent "$done" "$span") (${current}/${stop})"
+  done
+
+  log "Full Zenon address batch complete without a hit"
+  printf 'Wrote %s\n' "$output_file"
+}
+
 run_setup() {
   ensure_ready
   log "Setup/build complete"
@@ -324,6 +410,9 @@ Usage:
   bash runpod/run.sh benchmark [count] [start]
   bash runpod/run.sh range [start] [count]
   bash runpod/run.sh full [chunk_size] [start] [stop]
+  bash runpod/run.sh oracle-test
+  bash runpod/run.sh address [start] [count]
+  bash runpod/run.sh full-address [chunk_size] [start] [stop]
   bash runpod/run.sh summarize [jsonl_path]
   bash runpod/run.sh help
 
@@ -337,6 +426,10 @@ Examples:
   bash runpod/run.sh full
   bash runpod/run.sh full 500000000
   FULL_OUTPUT=out/full.jsonl bash runpod/run.sh full 100000000
+  bash runpod/run.sh oracle-test
+  bash runpod/run.sh address 0 100000
+  bash runpod/run.sh full-address
+  ADDRESS_OUTPUT=out/address.jsonl bash runpod/run.sh full-address 1000000
   bash runpod/run.sh summarize
   bash runpod/run.sh summarize out/full.jsonl
 
@@ -349,10 +442,13 @@ Environment overrides:
   FULL_CHUNK=500000000 bash runpod/run.sh full      # chunk size
   FULL_START=1000000000 bash runpod/run.sh full     # resume offset
   FULL_STOP=2000000000 bash runpod/run.sh full      # stop offset
+  ADDRESS_CHUNK=1000000 bash runpod/run.sh full-address
+  ADDRESS_START=1000000000 bash runpod/run.sh full-address
 
-Current CUDA stage:
-  exact-length candidate enumeration + BIP39 checksum validation only.
-  This does not yet perform the full Zenon address match.
+CUDA modes:
+  checksum/full      exact-length candidate enumeration + BIP39 checksum validation
+  address/full-address
+                     checksum-valid candidates + Zenon target-address comparison
 EOF
 }
 
@@ -373,8 +469,17 @@ main() {
     range|run)
       run_range "$@"
       ;;
+    oracle-test|self-test|address-test)
+      run_oracle_test "$@"
+      ;;
+    address|oracle)
+      run_address_range "$@"
+      ;;
     full|all)
       run_full "$@"
+      ;;
+    full-address|address-full|full-oracle)
+      run_full_address "$@"
       ;;
     summarize|summary)
       run_summarize "$@"

@@ -158,6 +158,8 @@ def main() -> None:
             "python_first_10000_first_valid_tail_indices": [19, 19, 19, 28],
             "python_first_10000_first_valid_tail_words": ["act", "act", "act", "adjust"],
             "python_first_10000_first_valid_entropy_hex": "9827c5be9fb68fa4b18bd002604c0981",
+            "python_first_valid_address": "z1qq6a32rut3yw9ar8tfa4nape698mzhdjyxkmpq",
+            "python_first_valid_core_hex": "0035d8a87c5c48e2f4675a7b59f439d14fb15db2",
         },
     }
 

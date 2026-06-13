@@ -92,6 +92,62 @@ start = 500,000,000
 count = 100,000,000
 ```
 
+## Address Oracle
+
+The address oracle is the part that can actually find the four words. It runs:
+
+```text
+BIP39 checksum
+PBKDF2-HMAC-SHA512
+SLIP-10 Ed25519 path m/44'/73404'/0'
+Ed25519 public key
+SHA3-256
+target-core comparison
+```
+
+First run the validation vector:
+
+```sh
+bash runpod/run.sh oracle-test
+```
+
+You want:
+
+```text
+"self_test_pass": true
+```
+
+Then try a small range:
+
+```sh
+bash runpod/run.sh address 0 100000
+```
+
+A real hit will print:
+
+```text
+"hit_found": true
+"hit_mnemonic": "oblige dilemma hurry disorder happy spoil shiver key ... ... ... ..."
+```
+
+Run the full address search in chunks:
+
+```sh
+bash runpod/run.sh full-address
+```
+
+By default, address mode uses `1,000,000`-candidate chunks because each checksum-valid candidate performs expensive wallet derivation. Use a larger chunk only after you see stable timings:
+
+```sh
+bash runpod/run.sh full-address 10000000
+```
+
+Resume from an offset:
+
+```sh
+ADDRESS_OUTPUT=out/address.jsonl ADDRESS_START=1000000000 bash runpod/run.sh full-address
+```
+
 ## Full Checksum Batch
 
 Run the entire exact-length candidate space through the current GPU checksum stage:
@@ -142,7 +198,7 @@ Arguments are:
 full [chunk_size] [start] [stop]
 ```
 
-Important: this is still the checksum-only GPU stage. It does not yet perform the final Zenon address derivation.
+Important: this is the checksum-only GPU stage. Use `full-address` to run the full target-address oracle.
 
 ## After Full Completes
 
@@ -210,16 +266,4 @@ CUDA_ARCH=86-virtual bash runpod/run.sh smoke
 
 ## Important Limit
 
-The CUDA binary currently validates candidate enumeration and BIP39 checksums only.
-
-It does not yet run:
-
-```text
-PBKDF2-HMAC-SHA512
-SLIP-10 Ed25519
-Ed25519 public key
-SHA3-256
-Zenon target-address comparison
-```
-
-So a passing RunPod benchmark tells us the GPU candidate/checksum stage works. It does not yet mean the final four words have been searched against the target address on GPU.
+The address oracle is new and should be treated as validation-first code. Always run `bash runpod/run.sh oracle-test` after pulling changes or switching GPU images.

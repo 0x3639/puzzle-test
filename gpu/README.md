@@ -154,22 +154,38 @@ bash runpod/run.sh full
 
 It runs the full space in chunks and writes JSONL progress under `out/`.
 
-## Full Oracle Work Remaining
+## Address Oracle
 
-The remaining CUDA work is in this order:
+The CUDA binary now also has an address mode:
 
-```text
-1. HMAC-SHA512
-2. PBKDF2-HMAC-SHA512, 2048 iterations
-3. SLIP-10 Ed25519 hardened derivation
-4. Ed25519 public-key generation
-5. SHA3-256 public-key hash
-6. 20-byte target-core compare
+```sh
+./gpu/build/zenon_bip39_cuda --mode self-test
+./gpu/build/zenon_bip39_cuda --mode address --start 0 --count 100000
 ```
 
-The highest-risk piece is Ed25519 public-key generation on GPU.
+From the repo root, prefer the wrapper:
 
-Until those stages are implemented, this binary cannot find the final target address by itself. It is a correctness and throughput foundation for the full GPU brute-force kernel.
+```sh
+bash runpod/run.sh oracle-test
+bash runpod/run.sh address 0 100000
+bash runpod/run.sh full-address
+```
+
+A hit prints `hit_found: true` and `hit_mnemonic`.
+
+## Full Oracle Notes
+
+The address oracle runs:
+
+```text
+1. HMAC-SHA512 / PBKDF2-HMAC-SHA512, 2048 iterations
+2. SLIP-10 Ed25519 hardened derivation
+3. Ed25519 public-key generation
+4. SHA3-256 public-key hash
+5. 20-byte target-core compare
+```
+
+The highest-risk piece is Ed25519 public-key generation on GPU, so run `oracle-test` before trusting a long search.
 
 ## Troubleshooting
 

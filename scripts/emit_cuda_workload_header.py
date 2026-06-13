@@ -11,6 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_INPUT = ROOT / "out" / "gpu_workload.json"
 DEFAULT_OUTPUT = ROOT / "gpu" / "generated" / "gpu_workload.h"
+WORDLIST = ROOT / "data" / "bip39_english.txt"
 
 
 def c_array(values: list[int], c_type: str, name: str, per_line: int = 12) -> list[str]:
@@ -44,13 +45,27 @@ def main() -> None:
         output_path = ROOT / output_path
 
     workload = json.loads(input_path.read_text())
+    words = WORDLIST.read_text().splitlines()
+    if len(words) != 2048:
+        raise SystemExit(f"expected 2048 BIP39 words, found {len(words)}")
     words_by_length = {
         int(length): [item["index"] for item in rows]
         for length, rows in workload["words_by_length"].items()
     }
     patterns = workload["length_patterns"]
     target_core = bytes.fromhex(workload["target_core_hex"])
+    first_valid_core = bytes.fromhex(
+        workload["validation_vectors"]["python_first_valid_core_hex"]
+    )
     known_prefix_entropy = pack_11bit_indices(workload["known_indices"])
+    known_prefix = (" ".join(workload["known_words"]) + " ").encode()
+
+    word_offsets = []
+    word_bytes = bytearray()
+    for word in words:
+        word_offsets.append(len(word_bytes))
+        word_bytes.extend(word.encode())
+    word_offsets.append(len(word_bytes))
 
     lines = [
         "#pragma once",
@@ -75,9 +90,18 @@ def main() -> None:
     ]
     lines.extend(c_array(workload["known_indices"], "uint16_t", "kKnownIndices", 8))
     lines.append("")
+    lines.extend(c_array(list(known_prefix), "uint8_t", "kKnownPrefixBytes", 16))
+    lines.append(f"static constexpr int kKnownPrefixByteCount = {len(known_prefix)};")
+    lines.append("")
     lines.extend(c_array(list(known_prefix_entropy), "uint8_t", "kKnownPrefixEntropyBytes", 11))
     lines.append("")
     lines.extend(c_array(list(target_core), "uint8_t", "kTargetCore", 20))
+    lines.append("")
+    lines.extend(c_array(list(first_valid_core), "uint8_t", "kFirstValidCore", 20))
+    lines.append("")
+    lines.extend(c_array(list(word_bytes), "uint8_t", "kWordChars", 24))
+    lines.append("")
+    lines.extend(c_array(word_offsets, "uint16_t", "kWordOffsets", 12))
     lines.append("")
 
     for length in sorted(words_by_length):
