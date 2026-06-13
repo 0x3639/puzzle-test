@@ -34,20 +34,17 @@ expected checksum-valid phrases: about 4.31B
 
 ## RunPod Setup
 
-Start with a CUDA devel image. On a fresh Ubuntu-based pod:
+Start with a CUDA devel image. The easiest path from the repo root is:
 
 ```sh
-apt-get update
-apt-get install -y git cmake build-essential python3 python3-venv python3-pip
-
 git clone --branch codex/zenon-cuda-kernel https://github.com/0x3639/puzzle-test.git
 cd puzzle-test
-
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
+bash runpod/run.sh smoke
 ```
+
+The helper script installs missing apt packages when possible, creates `.venv`, installs Python requirements, generates the workload, detects `CMAKE_CUDA_ARCHITECTURES`, builds, and verifies the smoke test.
+
+Manual setup is below if you prefer to run each step yourself.
 
 ## Generate Workload Header
 

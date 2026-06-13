@@ -224,33 +224,45 @@ See [gpu/README.md](gpu/README.md) for RunPod-specific setup.
 
 ## RunPod Quick Start
 
-Use a CUDA devel image, for example an Ubuntu CUDA 12 devel image. On a fresh pod:
+Use a CUDA devel image, for example an Ubuntu CUDA 12 devel image. A CUDA runtime image usually does not include `nvcc`, so use a devel image.
+
+On a fresh pod, this is the easiest path:
 
 ```sh
-apt-get update
-apt-get install -y git cmake build-essential python3 python3-venv python3-pip
-
 git clone --branch codex/zenon-cuda-kernel https://github.com/0x3639/puzzle-test.git
 cd puzzle-test
-
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-
-python3 scripts/prepare_gpu_workload.py
-python3 scripts/emit_cuda_workload_header.py
-
-cmake -S gpu -B gpu/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CUDA_ARCHITECTURES=89
-cmake --build gpu/build -j
-./gpu/build/zenon_bip39_cuda --start 0 --count 10000
+bash runpod/run.sh smoke
 ```
 
-For H100:
+The script installs missing apt packages when possible, creates `.venv`, installs Python requirements, generates the CUDA workload header, detects the GPU architecture, builds the binary, and verifies the smoke test.
+
+Expected smoke-test fields:
+
+```text
+"checksum_valid": 643
+"first_valid_global": 9
+"first_valid_tail_indices": [19, 19, 19, 28]
+```
+
+Run a default 100,000,000-candidate checksum benchmark:
 
 ```sh
-cmake -S gpu -B gpu/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CUDA_ARCHITECTURES=90
+bash runpod/run.sh benchmark
 ```
+
+Run a custom range:
+
+```sh
+bash runpod/run.sh range 500000000 100000000
+```
+
+For H100, if auto-detection fails:
+
+```sh
+CUDA_ARCH=90 bash runpod/run.sh smoke
+```
+
+See [runpod/README.md](runpod/README.md) for the shortest RunPod-focused guide.
 
 ## Other Probes
 
