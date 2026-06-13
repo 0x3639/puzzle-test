@@ -306,6 +306,16 @@ run_setup() {
   log "Setup/build complete"
 }
 
+run_summarize() {
+  local python_bin="python3"
+  if [ -x .venv/bin/python ]; then
+    python_bin=".venv/bin/python"
+  fi
+
+  log "Summarizing full checksum output"
+  "$python_bin" scripts/summarize_runpod_full.py "$@"
+}
+
 print_usage() {
   cat <<'EOF'
 Usage:
@@ -314,6 +324,7 @@ Usage:
   bash runpod/run.sh benchmark [count] [start]
   bash runpod/run.sh range [start] [count]
   bash runpod/run.sh full [chunk_size] [start] [stop]
+  bash runpod/run.sh summarize [jsonl_path]
   bash runpod/run.sh help
 
 Recommended first RunPod command:
@@ -326,6 +337,8 @@ Examples:
   bash runpod/run.sh full
   bash runpod/run.sh full 500000000
   FULL_OUTPUT=out/full.jsonl bash runpod/run.sh full 100000000
+  bash runpod/run.sh summarize
+  bash runpod/run.sh summarize out/full.jsonl
 
 Environment overrides:
   CUDA_ARCH=90 bash runpod/run.sh smoke            # H100 with matching toolkit
@@ -362,6 +375,9 @@ main() {
       ;;
     full|all)
       run_full "$@"
+      ;;
+    summarize|summary)
+      run_summarize "$@"
       ;;
     help|-h|--help)
       print_usage

@@ -270,6 +270,21 @@ Resume from an offset:
 FULL_OUTPUT=out/full_checksum.jsonl FULL_START=1000000000 bash runpod/run.sh full
 ```
 
+After it completes, summarize the output:
+
+```sh
+bash runpod/run.sh summarize
+```
+
+Good coverage looks like:
+
+```text
+"full_space_covered": true
+"candidate_count_sum": 69026912600
+"gap_count": 0
+"overlap_count": 0
+```
+
 For H100, if auto-detection fails:
 
 ```sh

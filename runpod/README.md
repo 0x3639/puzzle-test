@@ -144,6 +144,37 @@ full [chunk_size] [start] [stop]
 
 Important: this is still the checksum-only GPU stage. It does not yet perform the final Zenon address derivation.
 
+## After Full Completes
+
+Summarize the newest full-batch output:
+
+```sh
+bash runpod/run.sh summarize
+```
+
+Or summarize a specific file:
+
+```sh
+bash runpod/run.sh summarize out/full_checksum.jsonl
+```
+
+You want:
+
+```text
+"full_space_covered": true
+"candidate_count_sum": 69026912600
+"gap_count": 0
+"overlap_count": 0
+```
+
+The `checksum_valid` value should be close to:
+
+```text
+4314182037.5
+```
+
+That value is an expectation, not an exact required count.
+
 ## GPU Architecture Overrides
 
 The script tries to detect compute capability with `nvidia-smi`.
