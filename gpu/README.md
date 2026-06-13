@@ -162,6 +162,7 @@ The CUDA binary now also has an address mode:
 ```sh
 ./gpu/build/zenon_bip39_cuda --mode self-test
 ./gpu/build/zenon_bip39_cuda --mode address --start 0 --count 100000
+./gpu/build/zenon_bip39_cuda --mode address-compact --start 0 --count 100000000
 ```
 
 From the repo root, prefer the wrapper:
@@ -173,6 +174,8 @@ bash runpod/run.sh full-address
 ```
 
 A hit prints `hit_found: true` and `hit_mnemonic`.
+
+For full-wordlist search, prefer `address-compact`. It first gathers checksum-valid candidate offsets into a dense GPU queue, then runs the wallet oracle over that dense queue. The older single-pass `address` mode is still available for comparison, but it wastes most warp lanes during wallet derivation because only about 1 in 16 candidates passes the BIP39 checksum.
 
 ## Full Oracle Notes
 
@@ -187,6 +190,29 @@ The address oracle runs:
 ```
 
 The highest-risk piece is Ed25519 public-key generation on GPU, so run `oracle-test` before trusting a long search.
+
+## Throughput Tuning
+
+Use `address_derivations_per_second` as the main metric. `nvidia-smi` utilization can be misleading for the old single-pass mode because the sparse checksum branch leaves most lanes inactive during PBKDF2.
+
+Suggested Blackwell sweep from the repo root:
+
+```sh
+bash runpod/run.sh address 0 100000000
+CUDA_THREADS=128 bash runpod/run.sh address 0 100000000
+CUDA_THREADS=256 bash runpod/run.sh address 0 100000000
+CUDA_THREADS=512 bash runpod/run.sh address 0 100000000
+CUDA_BLOCKS=4096 CUDA_THREADS=128 bash runpod/run.sh address 0 100000000
+CUDA_BLOCKS=8192 CUDA_THREADS=128 bash runpod/run.sh address 0 100000000
+```
+
+Then run the full search with the best setting:
+
+```sh
+CUDA_BLOCKS=4096 CUDA_THREADS=128 ADDRESS_CHUNK=1000000000 bash runpod/run.sh full-address
+```
+
+If compact mode reports `"queue_overflow": true`, lower `ADDRESS_CHUNK` or raise `VALID_CAPACITY`.
 
 ## Troubleshooting
 

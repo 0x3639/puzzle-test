@@ -143,10 +143,19 @@ Run the full address search in chunks:
 bash runpod/run.sh full-address
 ```
 
-By default, address mode uses `1,000,000`-candidate chunks because each checksum-valid candidate performs expensive wallet derivation. Use a larger chunk only after you see stable timings:
+By default, address mode now uses `address-compact`. That does the search in two GPU stages:
+
+```text
+1. gather checksum-valid candidate offsets into a dense GPU queue
+2. run PBKDF2/SLIP-10/Ed25519/SHA3 only over that dense queue
+```
+
+This matters because only about 1 in 16 BIP39 candidates passes checksum. The older single-pass oracle leaves most warp lanes idle during wallet derivation; compact mode keeps the expensive oracle stage dense.
+
+The default address chunk is `100,000,000` candidates. On a large Blackwell GPU, try a larger chunk after the smoke/oracle tests pass:
 
 ```sh
-bash runpod/run.sh full-address 10000000
+ADDRESS_CHUNK=1000000000 bash runpod/run.sh full-address
 ```
 
 Resume from an offset:
@@ -167,7 +176,7 @@ The full address search has:
 Run this first to measure your actual Blackwell rate:
 
 ```sh
-bash runpod/run.sh address 0 1000000
+bash runpod/run.sh address 0 100000000
 ```
 
 Then use:
@@ -184,6 +193,39 @@ Reference table:
 100,000 derivations/sec    about 127 days
 1,000,000 derivations/sec  about 12.7 days
 10,000,000 derivations/sec about 30.5 hours
+```
+
+## Maxing GPU Utilization
+
+Watch `address_derivations_per_second`, not only `nvidia-smi` utilization. The old single-pass mode can show low utilization because most lanes fail checksum before the expensive wallet work. The new default compact mode should report:
+
+```text
+"stage": "zenon_address_compact_oracle"
+"queue_overflow": false
+"address_derivations": roughly count / 16
+```
+
+Suggested Blackwell tuning sweep:
+
+```sh
+bash runpod/run.sh address 0 100000000
+CUDA_THREADS=128 bash runpod/run.sh address 0 100000000
+CUDA_THREADS=256 bash runpod/run.sh address 0 100000000
+CUDA_THREADS=512 bash runpod/run.sh address 0 100000000
+CUDA_BLOCKS=4096 CUDA_THREADS=128 bash runpod/run.sh address 0 100000000
+CUDA_BLOCKS=8192 CUDA_THREADS=128 bash runpod/run.sh address 0 100000000
+```
+
+Pick the combination with the highest `address_derivations_per_second`, then run the full job with the same env vars:
+
+```sh
+CUDA_BLOCKS=4096 CUDA_THREADS=128 ADDRESS_CHUNK=1000000000 bash runpod/run.sh full-address
+```
+
+If you ever see `"queue_overflow": true`, the chunk produced more checksum-valid offsets than the compact queue could hold. Lower `ADDRESS_CHUNK` or raise the capacity:
+
+```sh
+VALID_CAPACITY=200000000 ADDRESS_CHUNK=1000000000 bash runpod/run.sh full-address
 ```
 
 ## Full Checksum Batch

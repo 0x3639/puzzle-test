@@ -24,6 +24,7 @@ struct KernelResult {
     uint8_t hit_core[20];
     uint8_t hit_mnemonic[zc::MAX_MNEMONIC_BYTES + 1];
     int hit_mnemonic_len;
+    unsigned int queue_overflow;
     uint8_t self_test_core[20];
     uint8_t self_test_mnemonic[zc::MAX_MNEMONIC_BYTES + 1];
     int self_test_mnemonic_len;
@@ -324,6 +325,91 @@ __global__ void address_kernel(
     }
 }
 
+__global__ void collect_valid_offsets_kernel(
+    uint64_t start,
+    uint64_t count,
+    uint64_t* valid_offsets,
+    uint64_t valid_capacity,
+    KernelResult* result
+) {
+    const uint64_t tid = uint64_t(blockIdx.x) * uint64_t(blockDim.x) + uint64_t(threadIdx.x);
+    const uint64_t stride = uint64_t(blockDim.x) * uint64_t(gridDim.x);
+
+    for (uint64_t local = tid; local < count; local += stride) {
+        const uint64_t global = start + local;
+        uint16_t tail[4];
+        if (!tail_for_global_offset(global, tail)) {
+            continue;
+        }
+        if (!bip39_checksum_valid(tail)) {
+            continue;
+        }
+
+        const unsigned long long slot = atomicAdd(&result->checksum_valid, 1ULL);
+        const unsigned long long old = atomicMin(&result->first_valid_global, (unsigned long long)global);
+        if ((unsigned long long)global < old) {
+            result->first_valid_tail[0] = tail[0];
+            result->first_valid_tail[1] = tail[1];
+            result->first_valid_tail[2] = tail[2];
+            result->first_valid_tail[3] = tail[3];
+        }
+
+        if (slot < valid_capacity) {
+            valid_offsets[slot] = global;
+        } else {
+            result->queue_overflow = 1u;
+        }
+    }
+}
+
+__global__ void address_compact_kernel(
+    const uint64_t* valid_offsets,
+    uint64_t valid_count,
+    KernelResult* result
+) {
+    const uint64_t tid = uint64_t(blockIdx.x) * uint64_t(blockDim.x) + uint64_t(threadIdx.x);
+    const uint64_t stride = uint64_t(blockDim.x) * uint64_t(gridDim.x);
+
+    for (uint64_t local = tid; local < valid_count; local += stride) {
+        if (result->hit_found) {
+            return;
+        }
+
+        const uint64_t global = valid_offsets[local];
+        uint16_t tail[4];
+        if (!tail_for_global_offset(global, tail)) {
+            continue;
+        }
+
+        atomicAdd(&result->address_derivations, 1ULL);
+        uint8_t core[20];
+        uint8_t mnemonic[zc::MAX_MNEMONIC_BYTES + 1];
+        int mnemonic_len = 0;
+        zc::derive_zenon_core(tail, core, mnemonic, &mnemonic_len);
+        if (!zc::core_matches_target(core)) {
+            continue;
+        }
+
+        if (atomicCAS(&result->hit_found, 0u, 1u) == 0u) {
+            result->hit_global = global;
+            result->hit_tail[0] = tail[0];
+            result->hit_tail[1] = tail[1];
+            result->hit_tail[2] = tail[2];
+            result->hit_tail[3] = tail[3];
+            #pragma unroll
+            for (int i = 0; i < 20; ++i) {
+                result->hit_core[i] = core[i];
+            }
+            for (int i = 0; i < mnemonic_len; ++i) {
+                result->hit_mnemonic[i] = mnemonic[i];
+            }
+            result->hit_mnemonic[mnemonic_len] = 0;
+            result->hit_mnemonic_len = mnemonic_len;
+        }
+        return;
+    }
+}
+
 __global__ void address_self_test_kernel(KernelResult* result) {
     uint16_t tail[4] = {19, 19, 19, 28};
     if (!bip39_checksum_valid(tail)) {
@@ -357,12 +443,14 @@ __global__ void address_self_test_kernel(KernelResult* result) {
 enum class Mode {
     Checksum,
     Address,
+    AddressCompact,
     SelfTest,
 };
 
 struct Options {
     uint64_t start = 0;
     uint64_t count = 10000;
+    uint64_t valid_capacity = 0;
     int threads = 256;
     int blocks = 0;
     Mode mode = Mode::Checksum;
@@ -403,6 +491,8 @@ Options parse_args(int argc, char** argv) {
             options.start = parse_u64(require_value("--start"));
         } else if (arg == "--count") {
             options.count = parse_u64(require_value("--count"));
+        } else if (arg == "--valid-capacity") {
+            options.valid_capacity = parse_u64(require_value("--valid-capacity"));
         } else if (arg == "--threads") {
             options.threads = parse_i32(require_value("--threads"));
         } else if (arg == "--blocks") {
@@ -413,6 +503,8 @@ Options parse_args(int argc, char** argv) {
                 options.mode = Mode::Checksum;
             } else if (mode == "address") {
                 options.mode = Mode::Address;
+            } else if (mode == "address-compact") {
+                options.mode = Mode::AddressCompact;
             } else if (mode == "self-test") {
                 options.mode = Mode::SelfTest;
             } else {
@@ -425,12 +517,13 @@ Options parse_args(int argc, char** argv) {
             options.mode = Mode::SelfTest;
         } else if (arg == "--help" || arg == "-h") {
             std::printf(
-                "Usage: zenon_bip39_cuda [--mode checksum|address|self-test] [--start N] [--count N] [--threads N] [--blocks N]\n"
+                "Usage: zenon_bip39_cuda [--mode checksum|address|address-compact|self-test] [--start N] [--count N] [--threads N] [--blocks N] [--valid-capacity N]\n"
                 "\n"
                 "Modes:\n"
-                "  checksum   exact-length candidate enumeration + BIP39 checksum validation\n"
-                "  address    checksum-valid candidates + Zenon address target comparison\n"
-                "  self-test  derive the known first-valid candidate and compare to Python vector\n"
+                "  checksum         candidate enumeration + BIP39 checksum validation\n"
+                "  address          single-pass checksum + Zenon address target comparison\n"
+                "  address-compact  gather checksum-valid offsets, then run the address oracle densely\n"
+                "  self-test        derive the known first-valid candidate and compare to Python vector\n"
             );
             std::exit(0);
         } else {
@@ -455,6 +548,20 @@ Options parse_args(int argc, char** argv) {
         options.count = zw::kTotalCombinations - options.start;
     }
     return options;
+}
+
+uint64_t default_valid_capacity(uint64_t count) {
+    if (count == 0) {
+        return 0;
+    }
+    uint64_t capacity = (count / 8) + 4096;
+    if (capacity < 16384) {
+        capacity = 16384;
+    }
+    if (capacity > count) {
+        capacity = count;
+    }
+    return capacity;
 }
 
 int main(int argc, char** argv) {
@@ -485,6 +592,7 @@ int main(int argc, char** argv) {
     std::memset(host_result.hit_core, 0, sizeof(host_result.hit_core));
     std::memset(host_result.hit_mnemonic, 0, sizeof(host_result.hit_mnemonic));
     host_result.hit_mnemonic_len = 0;
+    host_result.queue_overflow = 0;
     std::memset(host_result.self_test_core, 0, sizeof(host_result.self_test_core));
     std::memset(host_result.self_test_mnemonic, 0, sizeof(host_result.self_test_mnemonic));
     host_result.self_test_mnemonic_len = 0;
@@ -499,20 +607,66 @@ int main(int argc, char** argv) {
     CUDA_CHECK(cudaEventCreate(&ev_stop));
     CUDA_CHECK(cudaEventRecord(ev_start));
 
+    float collect_milliseconds = 0.0f;
+    float oracle_milliseconds = 0.0f;
+    uint64_t compact_queue_capacity = 0;
+
     if (options.mode == Mode::Checksum) {
         checksum_kernel<<<blocks, options.threads>>>(options.start, options.count, device_result);
     } else if (options.mode == Mode::Address) {
         address_kernel<<<blocks, options.threads>>>(options.start, options.count, device_result);
+    } else if (options.mode == Mode::AddressCompact) {
+        compact_queue_capacity = options.valid_capacity ? options.valid_capacity : default_valid_capacity(options.count);
+        uint64_t* valid_offsets = nullptr;
+        if (compact_queue_capacity > 0) {
+            CUDA_CHECK(cudaMalloc(&valid_offsets, compact_queue_capacity * sizeof(uint64_t)));
+        }
+
+        collect_valid_offsets_kernel<<<blocks, options.threads>>>(
+            options.start,
+            options.count,
+            valid_offsets,
+            compact_queue_capacity,
+            device_result
+        );
+        CUDA_CHECK(cudaGetLastError());
+        CUDA_CHECK(cudaEventRecord(ev_stop));
+        CUDA_CHECK(cudaEventSynchronize(ev_stop));
+        CUDA_CHECK(cudaEventElapsedTime(&collect_milliseconds, ev_start, ev_stop));
+        CUDA_CHECK(cudaMemcpy(&host_result, device_result, sizeof(KernelResult), cudaMemcpyDeviceToHost));
+
+        const uint64_t valid_count = uint64_t(host_result.checksum_valid);
+        if (!host_result.queue_overflow && valid_count > 0) {
+            CUDA_CHECK(cudaEventRecord(ev_start));
+            address_compact_kernel<<<blocks, options.threads>>>(
+                valid_offsets,
+                valid_count,
+                device_result
+            );
+            CUDA_CHECK(cudaGetLastError());
+            CUDA_CHECK(cudaEventRecord(ev_stop));
+            CUDA_CHECK(cudaEventSynchronize(ev_stop));
+            CUDA_CHECK(cudaEventElapsedTime(&oracle_milliseconds, ev_start, ev_stop));
+            CUDA_CHECK(cudaMemcpy(&host_result, device_result, sizeof(KernelResult), cudaMemcpyDeviceToHost));
+        }
+
+        if (valid_offsets) {
+            CUDA_CHECK(cudaFree(valid_offsets));
+        }
     } else {
         address_self_test_kernel<<<1, 1>>>(device_result);
     }
-    CUDA_CHECK(cudaGetLastError());
-    CUDA_CHECK(cudaEventRecord(ev_stop));
-    CUDA_CHECK(cudaEventSynchronize(ev_stop));
 
     float milliseconds = 0.0f;
-    CUDA_CHECK(cudaEventElapsedTime(&milliseconds, ev_start, ev_stop));
-    CUDA_CHECK(cudaMemcpy(&host_result, device_result, sizeof(KernelResult), cudaMemcpyDeviceToHost));
+    if (options.mode == Mode::AddressCompact) {
+        milliseconds = collect_milliseconds + oracle_milliseconds;
+    } else {
+        CUDA_CHECK(cudaGetLastError());
+        CUDA_CHECK(cudaEventRecord(ev_stop));
+        CUDA_CHECK(cudaEventSynchronize(ev_stop));
+        CUDA_CHECK(cudaEventElapsedTime(&milliseconds, ev_start, ev_stop));
+        CUDA_CHECK(cudaMemcpy(&host_result, device_result, sizeof(KernelResult), cudaMemcpyDeviceToHost));
+    }
 
     CUDA_CHECK(cudaFree(device_result));
     CUDA_CHECK(cudaEventDestroy(ev_start));
@@ -528,6 +682,8 @@ int main(int argc, char** argv) {
         std::printf("  \"stage\": \"bip39_checksum_only\",\n");
     } else if (options.mode == Mode::Address) {
         std::printf("  \"stage\": \"zenon_address_oracle\",\n");
+    } else if (options.mode == Mode::AddressCompact) {
+        std::printf("  \"stage\": \"zenon_address_compact_oracle\",\n");
     } else {
         std::printf("  \"stage\": \"zenon_address_self_test\",\n");
     }
@@ -540,6 +696,12 @@ int main(int argc, char** argv) {
     std::printf("  \"checksum_valid\": %llu,\n", host_result.checksum_valid);
     std::printf("  \"address_derivations\": %llu,\n", host_result.address_derivations);
     std::printf("  \"address_derivations_per_second\": %.2f,\n", derivations_per_second);
+    if (options.mode == Mode::AddressCompact) {
+        std::printf("  \"compact_queue_capacity\": %llu,\n", (unsigned long long)compact_queue_capacity);
+        std::printf("  \"queue_overflow\": %s,\n", host_result.queue_overflow ? "true" : "false");
+        std::printf("  \"collect_elapsed_seconds\": %.6f,\n", double(collect_milliseconds) / 1000.0);
+        std::printf("  \"oracle_elapsed_seconds\": %.6f,\n", double(oracle_milliseconds) / 1000.0);
+    }
     if (host_result.first_valid_global != 0xffffffffffffffffULL) {
         std::printf("  \"first_valid_global\": %llu,\n", host_result.first_valid_global);
         std::printf("  \"first_valid_tail_indices\": [%u, %u, %u, %u]\n",
@@ -551,7 +713,7 @@ int main(int argc, char** argv) {
         std::printf("  \"first_valid_global\": null,\n");
         std::printf("  \"first_valid_tail_indices\": null\n");
     }
-    if (options.mode == Mode::Address) {
+    if (options.mode == Mode::Address || options.mode == Mode::AddressCompact) {
         std::printf(",\n");
         std::printf("  \"hit_found\": %s", host_result.hit_found ? "true" : "false");
         if (host_result.hit_found) {

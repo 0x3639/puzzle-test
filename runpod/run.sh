@@ -8,8 +8,9 @@ DEFAULT_BENCH_COUNT=100000000
 DEFAULT_RANGE_START=0
 DEFAULT_RANGE_COUNT=10000
 DEFAULT_FULL_CHUNK=100000000
-DEFAULT_ADDRESS_CHUNK=1000000
+DEFAULT_ADDRESS_CHUNK=100000000
 DEFAULT_WORD_MODE=all
+DEFAULT_ADDRESS_MODE=address-compact
 
 log() {
   printf '\n==> %s\n' "$*"
@@ -201,6 +202,20 @@ build_binary() {
   cmake --build gpu/build -j
 }
 
+run_cuda() {
+  local args=("$@")
+  if [ -n "${CUDA_THREADS:-}" ]; then
+    args+=(--threads "$CUDA_THREADS")
+  fi
+  if [ -n "${CUDA_BLOCKS:-}" ]; then
+    args+=(--blocks "$CUDA_BLOCKS")
+  fi
+  if [ -n "${VALID_CAPACITY:-}" ]; then
+    args+=(--valid-capacity "$VALID_CAPACITY")
+  fi
+  ./gpu/build/zenon_bip39_cuda "${args[@]}"
+}
+
 ensure_ready() {
   install_system_deps
   ensure_cuda
@@ -215,7 +230,7 @@ run_smoke() {
 
   log "Running smoke test"
   local output
-  output="$(./gpu/build/zenon_bip39_cuda --start 0 --count 10000)"
+  output="$(run_cuda --start 0 --count 10000)"
   printf '%s\n' "$output"
 
   local mode
@@ -239,7 +254,7 @@ run_benchmark() {
   ensure_ready
 
   log "Running checksum benchmark: start=${start}, count=${count}"
-  ./gpu/build/zenon_bip39_cuda --start "$start" --count "$count"
+  run_cuda --start "$start" --count "$count"
 }
 
 run_range() {
@@ -248,7 +263,7 @@ run_range() {
   ensure_ready
 
   log "Running checksum range: start=${start}, count=${count}"
-  ./gpu/build/zenon_bip39_cuda --start "$start" --count "$count"
+  run_cuda --start "$start" --count "$count"
 }
 
 run_oracle_test() {
@@ -256,7 +271,7 @@ run_oracle_test() {
 
   log "Running Zenon address oracle self-test"
   local output
-  output="$(./gpu/build/zenon_bip39_cuda --mode self-test)"
+  output="$(run_cuda --mode self-test)"
   printf '%s\n' "$output"
   printf '%s\n' "$output" | grep -q '"self_test_pass": true' || die "Address oracle self-test failed"
   log "Address oracle self-test passed"
@@ -267,8 +282,12 @@ run_address_range() {
   local count="${2:-$DEFAULT_RANGE_COUNT}"
   ensure_ready
 
-  log "Running Zenon address oracle range: start=${start}, count=${count}"
-  ./gpu/build/zenon_bip39_cuda --mode address --start "$start" --count "$count"
+  local address_mode="${ADDRESS_MODE:-$DEFAULT_ADDRESS_MODE}"
+  log "Running Zenon address oracle range: mode=${address_mode}, start=${start}, count=${count}"
+  local output
+  output="$(run_cuda --mode "$address_mode" --start "$start" --count "$count")"
+  printf '%s\n' "$output"
+  printf '%s\n' "$output" | grep -q '"queue_overflow": true' && die "Address compact queue overflowed; rerun with a smaller ADDRESS_CHUNK or larger --valid-capacity"
 }
 
 total_combinations() {
@@ -322,7 +341,7 @@ run_full() {
 
     log "Chunk start=${current}, count=${count}"
     local output
-    output="$(./gpu/build/zenon_bip39_cuda --start "$current" --count "$count")"
+    output="$(run_cuda --start "$current" --count "$count")"
     printf '%s\n' "$output"
     printf '%s\n' "$output" | json_compact >> "$output_file"
 
@@ -346,7 +365,7 @@ run_full_address() {
 
   log "Running address oracle self-test before full address batch"
   local self_test
-  self_test="$(./gpu/build/zenon_bip39_cuda --mode self-test)"
+  self_test="$(run_cuda --mode self-test)"
   printf '%s\n' "$self_test"
   printf '%s\n' "$self_test" | grep -q '"self_test_pass": true' || die "Address oracle self-test failed"
 
@@ -381,8 +400,10 @@ run_full_address() {
 
     log "Address chunk start=${current}, count=${count}"
     local output
-    output="$(./gpu/build/zenon_bip39_cuda --mode address --start "$current" --count "$count")"
+    local address_mode="${ADDRESS_MODE:-$DEFAULT_ADDRESS_MODE}"
+    output="$(run_cuda --mode "$address_mode" --start "$current" --count "$count")"
     printf '%s\n' "$output"
+    printf '%s\n' "$output" | grep -q '"queue_overflow": true' && die "Address compact queue overflowed; rerun with a smaller ADDRESS_CHUNK or larger --valid-capacity"
     printf '%s\n' "$output" | json_compact >> "$output_file"
 
     if printf '%s\n' "$output" | grep -q '"hit_found": true'; then
@@ -441,9 +462,9 @@ Examples:
   bash runpod/run.sh full 500000000
   FULL_OUTPUT=out/full.jsonl bash runpod/run.sh full 100000000
   bash runpod/run.sh oracle-test
-  bash runpod/run.sh address 0 100000
+  bash runpod/run.sh address 0 100000000
   bash runpod/run.sh full-address
-  ADDRESS_OUTPUT=out/address.jsonl bash runpod/run.sh full-address 1000000
+  ADDRESS_OUTPUT=out/address.jsonl bash runpod/run.sh full-address 1000000000
   bash runpod/run.sh summarize
   bash runpod/run.sh summarize out/full.jsonl
 
@@ -455,16 +476,21 @@ Environment overrides:
   SKIP_VENV=1 bash runpod/run.sh smoke             # use system Python
   WORD_MODE=exact18 bash runpod/run.sh smoke       # old 18-byte constrained mode
   WORD_MODE=all bash runpod/run.sh smoke           # full 2048^4 wordlist mode
+  ADDRESS_MODE=address bash runpod/run.sh address  # old single-pass oracle
+  ADDRESS_MODE=address-compact bash runpod/run.sh address
+  CUDA_THREADS=128 bash runpod/run.sh address 0 100000000
+  CUDA_BLOCKS=4096 bash runpod/run.sh address 0 100000000
+  VALID_CAPACITY=200000000 bash runpod/run.sh address 0 1000000000
   FULL_CHUNK=500000000 bash runpod/run.sh full      # chunk size
   FULL_START=1000000000 bash runpod/run.sh full     # resume offset
   FULL_STOP=2000000000 bash runpod/run.sh full      # stop offset
-  ADDRESS_CHUNK=1000000 bash runpod/run.sh full-address
+  ADDRESS_CHUNK=1000000000 bash runpod/run.sh full-address
   ADDRESS_START=1000000000 bash runpod/run.sh full-address
 
 CUDA modes:
   checksum/full      candidate enumeration + BIP39 checksum validation
   address/full-address
-                     checksum-valid candidates + Zenon target-address comparison
+                     compacted checksum-valid candidates + Zenon target-address comparison
 EOF
 }
 

@@ -267,7 +267,7 @@ bash runpod/run.sh oracle-test
 Run a small real target-address search range:
 
 ```sh
-bash runpod/run.sh address 0 100000
+bash runpod/run.sh address 0 100000000
 ```
 
 Run the full address search in chunks:
@@ -277,6 +277,25 @@ bash runpod/run.sh full-address
 ```
 
 A target hit will print `"hit_found": true` and a `hit_mnemonic`.
+
+Address search defaults to compact mode. It first gathers checksum-valid offsets, then runs the expensive wallet oracle on that dense queue. This avoids the low-lane-utilization pattern from the old single-pass mode, where only about 1 in 16 candidates reached PBKDF2/Ed25519.
+
+Suggested Blackwell tuning sweep:
+
+```sh
+bash runpod/run.sh address 0 100000000
+CUDA_THREADS=128 bash runpod/run.sh address 0 100000000
+CUDA_THREADS=256 bash runpod/run.sh address 0 100000000
+CUDA_THREADS=512 bash runpod/run.sh address 0 100000000
+CUDA_BLOCKS=4096 CUDA_THREADS=128 bash runpod/run.sh address 0 100000000
+CUDA_BLOCKS=8192 CUDA_THREADS=128 bash runpod/run.sh address 0 100000000
+```
+
+Then run the full job with the fastest setting:
+
+```sh
+CUDA_BLOCKS=4096 CUDA_THREADS=128 ADDRESS_CHUNK=1000000000 bash runpod/run.sh full-address
+```
 
 Full-wordlist ETA depends on `address_derivations_per_second` from your own Blackwell benchmark:
 
