@@ -127,7 +127,7 @@ You want:
 Then try a small range:
 
 ```sh
-bash runpod/run.sh address 0 100000
+bash runpod/run.sh address 0 100000000
 ```
 
 A real hit will print:
@@ -162,6 +162,62 @@ Resume from an offset:
 
 ```sh
 ADDRESS_OUTPUT=out/address.jsonl ADDRESS_START=1000000000 bash runpod/run.sh full-address
+```
+
+## Background Jobs
+
+Start the full address search detached from your terminal:
+
+```sh
+CUDA_BLOCKS=4096 CUDA_THREADS=128 ADDRESS_CHUNK=1000000000 \
+  JOB_ID=blackwell_full_search \
+  bash runpod/run.sh bg-start full-address
+```
+
+This writes job metadata and logs under:
+
+```text
+out/runpod_jobs/
+```
+
+Check status from any shell in the repo:
+
+```sh
+bash runpod/run.sh bg-status blackwell_full_search
+```
+
+Or check the most recent job:
+
+```sh
+bash runpod/run.sh bg-status
+```
+
+Useful job commands:
+
+```sh
+bash runpod/run.sh bg-list
+bash runpod/run.sh bg-tail blackwell_full_search
+bash runpod/run.sh bg-tail -f blackwell_full_search
+bash runpod/run.sh bg-stop blackwell_full_search
+```
+
+Status reads completed chunks from the JSONL output, so progress updates after each chunk finishes. If you use very large chunks, `bg-tail -f` is the best way to see the currently running chunk.
+
+For resumable runs, write to a stable output path:
+
+```sh
+ADDRESS_OUTPUT=out/address_full.jsonl \
+  JOB_ID=blackwell_full_search \
+  bash runpod/run.sh bg-start full-address
+```
+
+If the pod stops, resume from the next unfinished offset:
+
+```sh
+ADDRESS_OUTPUT=out/address_full.jsonl \
+  ADDRESS_START=<next_offset> \
+  JOB_ID=blackwell_resume \
+  bash runpod/run.sh bg-start full-address
 ```
 
 ## Full-Wordlist ETA

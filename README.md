@@ -297,6 +297,21 @@ Then run the full job with the fastest setting:
 CUDA_BLOCKS=4096 CUDA_THREADS=128 ADDRESS_CHUNK=1000000000 bash runpod/run.sh full-address
 ```
 
+Run the same full job detached in the background:
+
+```sh
+CUDA_BLOCKS=4096 CUDA_THREADS=128 ADDRESS_CHUNK=1000000000 \
+  JOB_ID=blackwell_full_search \
+  bash runpod/run.sh bg-start full-address
+```
+
+Check it later:
+
+```sh
+bash runpod/run.sh bg-status blackwell_full_search
+bash runpod/run.sh bg-tail -f blackwell_full_search
+```
+
 Full-wordlist ETA depends on `address_derivations_per_second` from your own Blackwell benchmark:
 
 ```text
