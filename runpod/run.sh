@@ -970,6 +970,7 @@ print_multi_progress() {
   "$python_bin" - "$start" "$stop" "$@" <<'PY'
 import json
 import sys
+from collections import defaultdict
 from pathlib import Path
 
 start = int(sys.argv[1])
@@ -1008,10 +1009,42 @@ elapsed_sum = sum(float(row.get("elapsed_seconds", 0.0)) for row in rows)
 checksum_sum = sum(int(row.get("checksum_valid", 0)) for row in rows)
 derivation_sum = sum(int(row.get("address_derivations", 0)) for row in rows)
 hit_rows = [row for row in rows if row.get("hit_found") is True]
-combos_per_second = count_sum / elapsed_sum if elapsed_sum else 0.0
-derivations_per_second = derivation_sum / elapsed_sum if elapsed_sum else 0.0
+
+by_output = defaultdict(lambda: {"count": 0, "elapsed": 0.0, "derivations": 0})
+for row in rows:
+    shard = by_output[row["_path"]]
+    shard["count"] += int(row.get("count", 0))
+    shard["elapsed"] += float(row.get("elapsed_seconds", 0.0))
+    shard["derivations"] += int(row.get("address_derivations", 0))
+
+shard_combo_rates = [
+    stats["count"] / stats["elapsed"]
+    for stats in by_output.values()
+    if stats["elapsed"] > 0
+]
+shard_derivation_rates = [
+    stats["derivations"] / stats["elapsed"]
+    for stats in by_output.values()
+    if stats["elapsed"] > 0
+]
+aggregate_combos_per_second = sum(shard_combo_rates)
+aggregate_derivations_per_second = sum(shard_derivation_rates)
+mean_shard_combos_per_second = (
+    aggregate_combos_per_second / len(shard_combo_rates)
+    if shard_combo_rates
+    else 0.0
+)
+mean_shard_derivations_per_second = (
+    aggregate_derivations_per_second / len(shard_derivation_rates)
+    if shard_derivation_rates
+    else 0.0
+)
 progress = count_sum / span if span > 0 else 0.0
-eta_seconds = (span - count_sum) / combos_per_second if combos_per_second and count_sum <= span else None
+eta_seconds = (
+    (span - count_sum) / aggregate_combos_per_second
+    if aggregate_combos_per_second and count_sum <= span
+    else None
+)
 
 gaps = []
 overlaps = []
@@ -1036,13 +1069,17 @@ print(f"range_stop={stop}")
 print(f"progress_percent={progress * 100:.6f}")
 print(f"checksum_valid={checksum_sum}")
 print(f"address_derivations={derivation_sum}")
-print(f"weighted_combos_per_second={combos_per_second:.2f}")
-print(f"weighted_address_derivations_per_second={derivations_per_second:.2f}")
+print(f"weighted_combos_per_second={aggregate_combos_per_second:.2f}")
+print(f"weighted_address_derivations_per_second={aggregate_derivations_per_second:.2f}")
+print(f"mean_shard_combos_per_second={mean_shard_combos_per_second:.2f}")
+print(f"mean_shard_address_derivations_per_second={mean_shard_derivations_per_second:.2f}")
 if eta_seconds is not None:
     print(f"eta_seconds={eta_seconds:.0f}")
     print(f"eta_hours={eta_seconds / 3600:.2f}")
 print(f"gap_count={len(gaps)}")
 print(f"overlap_count={len(overlaps)}")
+if gaps and count_sum < span:
+    print("gap_note=gaps are expected until every shard has completed its assigned range")
 if gaps:
     first = gaps[0]
     print(f"first_gap={first['start']}..{first['stop']}")
