@@ -721,7 +721,10 @@ else:
         print("progress_rows=0")
         print("progress_note=no parseable completed chunks yet")
     else:
-        intervals = sorted((int(row["start"]), int(row["start"]) + int(row["count"]), row) for row in rows)
+        intervals = sorted(
+            ((int(row["start"]), int(row["start"]) + int(row["count"]), row) for row in rows),
+            key=lambda item: (item[0], item[1]),
+        )
         range_start = intervals[0][0]
         range_stop = max(stop for _start, stop, _row in intervals)
         count_sum = sum(int(row.get("count", 0)) for row in rows)
@@ -1003,7 +1006,10 @@ if not rows:
     print("progress_note=no completed chunks written yet")
     sys.exit(0)
 
-intervals = sorted((int(row["start"]), int(row["start"]) + int(row["count"]), row) for row in rows)
+intervals = sorted(
+    ((int(row["start"]), int(row["start"]) + int(row["count"]), row) for row in rows),
+    key=lambda item: (item[0], item[1]),
+)
 count_sum = sum(int(row.get("count", 0)) for row in rows)
 elapsed_sum = sum(float(row.get("elapsed_seconds", 0.0)) for row in rows)
 checksum_sum = sum(int(row.get("checksum_valid", 0)) for row in rows)
@@ -1039,13 +1045,6 @@ mean_shard_derivations_per_second = (
     if shard_derivation_rates
     else 0.0
 )
-progress = count_sum / span if span > 0 else 0.0
-eta_seconds = (
-    (span - count_sum) / aggregate_combos_per_second
-    if aggregate_combos_per_second and count_sum <= span
-    else None
-)
-
 gaps = []
 overlaps = []
 cursor = start
@@ -1062,8 +1061,18 @@ for interval_start, interval_stop, _row in intervals:
 if cursor < stop:
     gaps.append({"start": cursor, "stop": stop, "count": stop - cursor})
 
+gap_count_sum = sum(gap["count"] for gap in gaps)
+unique_count_sum = max(0, span - gap_count_sum)
+progress = unique_count_sum / span if span > 0 else 0.0
+eta_seconds = (
+    (span - unique_count_sum) / aggregate_combos_per_second
+    if aggregate_combos_per_second and unique_count_sum <= span
+    else None
+)
+
 print(f"progress_rows={len(rows)}")
 print(f"candidate_count_sum={count_sum}")
+print(f"unique_candidate_count={unique_count_sum}")
 print(f"range_start={start}")
 print(f"range_stop={stop}")
 print(f"progress_percent={progress * 100:.6f}")

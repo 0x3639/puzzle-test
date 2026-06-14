@@ -48,8 +48,11 @@ def load_rows(path: Path) -> list[dict]:
 def summarize(path: Path) -> dict:
     rows = load_rows(path)
     intervals = sorted(
-        (int(row["start"]), int(row["start"]) + int(row["count"]), row)
-        for row in rows
+        (
+            (int(row["start"]), int(row["start"]) + int(row["count"]), row)
+            for row in rows
+        ),
+        key=lambda item: (item[0], item[1]),
     )
 
     gaps = []
