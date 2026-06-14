@@ -220,6 +220,71 @@ ADDRESS_OUTPUT=out/address_full.jsonl \
   bash runpod/run.sh bg-start full-address
 ```
 
+## Multiple GPUs In One Pod
+
+For a machine with multiple GPUs, use process-level sharding. Each GPU gets a disjoint slice of the global candidate range and writes its own JSONL file.
+
+Start all visible GPUs automatically:
+
+```sh
+CUDA_THREADS=256 ADDRESS_CHUNK=1000000000 \
+  MULTI_ID=full_address_multi \
+  bash runpod/run.sh multi-start full-address
+```
+
+Or choose specific GPUs:
+
+```sh
+CUDA_THREADS=256 ADDRESS_CHUNK=1000000000 \
+  bash runpod/run.sh multi-start full-address \
+    --gpus 0,1,2,3 \
+    --id full_address_4gpu \
+    --chunk 1000000000
+```
+
+The wrapper builds once, then starts one background job per GPU with:
+
+```text
+CUDA_VISIBLE_DEVICES=<gpu>
+RUNPOD_SKIP_SETUP=1
+ADDRESS_START=<shard_start>
+ADDRESS_STOP=<shard_stop>
+```
+
+Monitor the whole run:
+
+```sh
+bash runpod/run.sh multi-status full_address_4gpu
+bash runpod/run.sh multi-summary full_address_4gpu
+```
+
+List multi-GPU runs:
+
+```sh
+bash runpod/run.sh multi-list
+```
+
+Tail a shard by index:
+
+```sh
+bash runpod/run.sh multi-tail full_address_4gpu 0
+```
+
+Stop all shards:
+
+```sh
+bash runpod/run.sh multi-stop full_address_4gpu
+```
+
+You can still inspect a shard with the normal background commands:
+
+```sh
+bash runpod/run.sh bg-status full_address_4gpu_gpu0
+bash runpod/run.sh bg-tail -f full_address_4gpu_gpu0
+```
+
+For `N` identical GPUs, expected wall-clock time is roughly `single_gpu_time / N`. Total cost only improves if the multi-GPU hourly price is better than linear.
+
 ## Full-Wordlist ETA
 
 The full address search has:

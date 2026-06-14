@@ -312,6 +312,22 @@ bash runpod/run.sh bg-status blackwell_full_search
 bash runpod/run.sh bg-tail -f blackwell_full_search
 ```
 
+On a multi-GPU pod, shard the search across GPUs:
+
+```sh
+CUDA_THREADS=256 ADDRESS_CHUNK=1000000000 \
+  bash runpod/run.sh multi-start full-address \
+    --gpus 0,1,2,3 \
+    --id full_address_4gpu \
+    --chunk 1000000000
+```
+
+Monitor all shards together:
+
+```sh
+bash runpod/run.sh multi-status full_address_4gpu
+```
+
 Full-wordlist ETA depends on `address_derivations_per_second` from your own Blackwell benchmark:
 
 ```text
